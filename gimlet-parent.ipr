@@ -83,6 +83,9 @@
   <component name="JUnitProjectSettings">
     <option name="TEST_RUNNER" value="UI" />
   </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_STRING" value="-target 1.6" />
+  </component>
   <component name="JavadocGenerationManager">
     <option name="OUTPUT_DIRECTORY" />
     <option name="OPTION_SCOPE" value="protected" />
@@ -99,6 +102,13 @@
     <option name="HEAP_SIZE" />
     <option name="LOCALE" />
     <option name="OPEN_IN_BROWSER" value="false" />
+  </component>
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/pom.xml" />
+      </list>
+    </option>
   </component>
   <component name="Palette2">
     <group name="Swing">
@@ -225,6 +235,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/collect/collect.iml" filepath="$PROJECT_DIR$/collect/collect.iml" />
       <module fileurl="file://$PROJECT_DIR$/gimlet-parent.iml" filepath="$PROJECT_DIR$/gimlet-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/graph/graph.iml" filepath="$PROJECT_DIR$/graph/graph.iml" />
       <module fileurl="file://$PROJECT_DIR$/inject/inject.iml" filepath="$PROJECT_DIR$/inject/inject.iml" />
       <module fileurl="file://$PROJECT_DIR$/reflect/reflect.iml" filepath="$PROJECT_DIR$/reflect/reflect.iml" />
     </modules>
@@ -232,12 +243,25 @@
   <component name="ProjectResources">
     <default-html-doctype>http://www.w3.org/1999/xhtml</default-html-doctype>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK" />
   <component name="SvnBranchConfigurationManager">
     <option name="mySupportsUserInfoFilter" value="true" />
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="svn" />
+  </component>
+  <component name="libraryTable">
+    <library name="Maven: junit:junit:3.8.1">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
+      </SOURCES>
+    </library>
   </component>
 </project>
 
