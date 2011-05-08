@@ -2,6 +2,7 @@
 
 package com.google.gimlet.inject.legprovider;
 
+import com.google.common.collect.Lists;
 import com.google.inject.AbstractModule;
 import com.google.inject.BindingAnnotation;
 import com.google.inject.ConfigurationException;
@@ -326,7 +327,7 @@ public class LegModuleBuilderTest extends TestCase {
   }
 
   private <T> Injector getInjector(Module... modules) {
-    List<Module> allModules = Arrays.asList(modules);
+    List<Module> allModules = Lists.newArrayList(Arrays.asList(modules));
     allModules.add(SEED_MODULE);
     return Guice.createInjector(allModules);
   }

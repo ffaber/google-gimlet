@@ -229,7 +229,7 @@ public class NestedScopeInterceptorTest extends TestCase {
           methodInvocation, bindingFrame);
       fail("Expected to see an exception for lack of @NestedScoped");
     } catch (IllegalArgumentException iae) {
-      assertContainsRegex(
+      JUnitAsserts.assertContainsRegex(
           "Unscoped method passed to the NestedScopeInterceptor",
           iae.getMessage());
     }
@@ -260,7 +260,7 @@ public class NestedScopeInterceptorTest extends TestCase {
       fail("Expected to see an exception because the method has a parameter " +
           "that has two BindingAnnotations on it.");
     } catch (IllegalArgumentException iae) {
-      assertContainsRegex(
+      JUnitAsserts.assertContainsRegex(
           "There must be no more than one binding annotation",
           iae.getMessage());
     }
