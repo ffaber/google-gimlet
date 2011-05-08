@@ -22,8 +22,8 @@
     <orderEntry type="library" name="Maven: aopalliance:aopalliance:1.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.inject.extensions:guice-assistedinject:3.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.inject.extensions:guice-multibindings:3.0" level="project" />
-    <orderEntry type="module" module-name="gimlet-tl4j" scope="TEST" />
     <orderEntry type="library" name="Maven: com.google.guiceberry:guiceberry:3.0.4" level="project" />
+    <orderEntry type="module" module-name="gimlet-tl4j" scope="TEST" />
   </component>
 </module>
 
