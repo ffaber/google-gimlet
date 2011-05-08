@@ -12,7 +12,7 @@
 
   <groupId>com.google.gimlet.inject</groupId>
   <artifactId>inject-parent</artifactId>
-  <name>inject-parent</name>
+  <name>inject</name>
   <url>http://maven.apache.org</url>
 
   <properties>
