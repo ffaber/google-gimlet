@@ -6,6 +6,7 @@ import static com.google.gimlet.testing.tl4j.JUnitAsserts.assertContainsRegex;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.easymock.EasyMock.expect;
 
+import com.google.gimlet.testing.easymock.Mocca;
 import com.google.inject.BindingAnnotation;
 import com.google.inject.Key;
 import com.google.inject.Provider;
@@ -32,28 +33,18 @@ public class NestedScopeInterceptorTest extends TestCase {
   NestedScopeInterceptor nestedScopeInterceptor;
   Provider<BindingFrame> bindingFrameProvider;
   NestedScopeImpl nestedScopeImpl;
-
-  // TODO(ffaber): replace with a mock controller.
-  interface YetToBeImplementedMockController {
-    void replayAll();
-    void verifyAll();
-    <T> T createMock(Class<? extends T> clazz);
-  }
-
-  YetToBeImplementedMockController mocks;
+  Mocca mocks;
 
   @Override protected void setUp() throws Exception {
     super.setUp();
+    mocks = new Mocca();
     bindingFrameProvider = new SimpleBindingFrameProvider();
     nestedScopeImpl = new NestedScopeImpl(bindingFrameProvider);
     nestedScopeInterceptor = new NestedScopeInterceptor();
     nestedScopeInterceptor.initialize(nestedScopeImpl, bindingFrameProvider);
   }
 
-  // TODO(ffaber): remove this when we install a real mock controller.
-  public void testDoNothingUntilMockControllerIsInstalled() { }
-
-  public void NO_testAddUniqueKey() {
+  public void testAddUniqueKey() {
     mocks.replayAll();
 
     BindingFrame bindingFrame = new BindingFrame();
@@ -79,7 +70,7 @@ public class NestedScopeInterceptorTest extends TestCase {
     mocks.verifyAll();
   }
 
-  public void NO_testScopedMethodArguments() throws Exception {
+  public void testScopedMethodArguments() throws Exception {
     Method scopedMethod = getClass().getMethod(
         "scopedMethod",
         String.class,
@@ -155,7 +146,7 @@ public class NestedScopeInterceptorTest extends TestCase {
       Integer notCapturedInteger) {
   }
 
-  public void NO_testScopedMethodThrowsException() throws Throwable {
+  public void testScopedMethodThrowsException() throws Throwable {
     Method scopedMethod =
         getClass().getMethod("simpleScopedMethod", String.class);
     Object[] methodArguments = { "simpleScopedMethodArgument" };
@@ -184,7 +175,7 @@ public class NestedScopeInterceptorTest extends TestCase {
   }
 
 
-  public void NO_testScopedMethodArguments_collidingKeys() throws Exception {
+  public void testScopedMethodArguments_collidingKeys() throws Exception {
     Method illegallyScopedMethod = getClass().getMethod(
         "illegallyScopedMethod",
         String.class,
@@ -215,7 +206,7 @@ public class NestedScopeInterceptorTest extends TestCase {
       @CaptureInNestedScope String captured2) {
   }
 
-  public void NO_testScopedMethodArguments_notAnnotated() throws Exception {
+  public void testScopedMethodArguments_notAnnotated() throws Exception {
     Method notAnnotatedMethod = getClass().getMethod(
         "notAnnotatedMethod", String.class);
 
@@ -244,7 +235,7 @@ public class NestedScopeInterceptorTest extends TestCase {
       @CaptureInNestedScope String captured1) {
   }
 
-  public void NO_testScopedMethodArguments_tooManyBindingAnnotations()
+  public void testScopedMethodArguments_tooManyBindingAnnotations()
       throws Exception {
     Method tooManyAnnotationsMethod = getClass().getMethod(
         "tooManyBindingAnnotations", String.class);

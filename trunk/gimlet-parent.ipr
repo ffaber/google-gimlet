@@ -267,6 +267,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/collect/collect.iml" filepath="$PROJECT_DIR$/collect/collect.iml" />
+      <module fileurl="file://$PROJECT_DIR$/testing/easymock/gimlet-easymock.iml" filepath="$PROJECT_DIR$/testing/easymock/gimlet-easymock.iml" />
       <module fileurl="file://$PROJECT_DIR$/inject/legprovider/gimlet-legprovider.iml" filepath="$PROJECT_DIR$/inject/legprovider/gimlet-legprovider.iml" />
       <module fileurl="file://$PROJECT_DIR$/inject/nestedscope/gimlet-nestedscope.iml" filepath="$PROJECT_DIR$/inject/nestedscope/gimlet-nestedscope.iml" />
       <module fileurl="file://$PROJECT_DIR$/gimlet-parent.iml" filepath="$PROJECT_DIR$/gimlet-parent.iml" />
