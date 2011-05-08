@@ -2,17 +2,27 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.google.gimlet</groupId>
-  <artifactId>inject</artifactId>
-  <version>0.5-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <parent>
+    <groupId>com.google.gimlet</groupId>
+    <artifactId>gimlet-parent</artifactId>
+    <version>0.5-SNAPSHOT</version>
+  </parent>
 
-  <name>inject</name>
+  <packaging>pom</packaging>
+
+  <groupId>com.google.gimlet.inject</groupId>
+  <artifactId>inject-parent</artifactId>
+  <name>inject-parent</name>
   <url>http://maven.apache.org</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+
+  <modules>
+    <module>legprovider</module>
+    <module>nestedscope</module>
+  </modules>
 
   <dependencies>
     <dependency>
