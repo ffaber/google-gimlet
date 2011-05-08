@@ -3,13 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.google.gimlet.inject</groupId>
-    <artifactId>inject-parent</artifactId>
+    <groupId>com.google.gimlet.testing</groupId>
+    <artifactId>testing-parent</artifactId>
     <version>0.5-SNAPSHOT</version>
   </parent>
 
-  <artifactId>gimlet-nestedscope</artifactId>
-  <name>gimlet-nestedscope</name>
+  <artifactId>gimlet-easymock</artifactId>
+  <name>gimlet-easymock</name>
   <url>http://maven.apache.org</url>
   <packaging>jar</packaging>
 
@@ -19,9 +19,14 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.google.gimlet.testing</groupId>
-      <artifactId>gimlet-easymock</artifactId>
-      <version>0.5-SNAPSHOT</version>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>r09</version>
+    </dependency>
+    <dependency>
+      <groupId>org.easymock</groupId>
+      <artifactId>easymock</artifactId>
+      <version>3.0</version>
     </dependency>
   </dependencies>
 </project>
