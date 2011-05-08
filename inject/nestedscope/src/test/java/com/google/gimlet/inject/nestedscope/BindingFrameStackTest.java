@@ -2,7 +2,7 @@
 
 package com.google.gimlet.inject.nestedscope;
 
-import static com.google.common.testing.junit3.JUnitAsserts.assertContentsInOrder;
+import static com.google.gimlet.testing.tl4j.JUnitAsserts.assertContentsInOrder;
 
 import com.google.inject.Key;
 import com.google.inject.name.Names;

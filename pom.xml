@@ -20,9 +20,10 @@
 
   <modules>
     <module>collect</module>
+    <module>graph</module>
     <module>inject</module>
     <module>reflect</module>
-    <module>graph</module>
+    <module>testing</module>
   </modules>
 
   <scm>

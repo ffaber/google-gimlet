@@ -51,7 +51,12 @@
       <version>r09</version>
     </dependency>
 
-
+    <dependency>
+      <groupId>com.google.gimlet.testing</groupId>
+      <artifactId>gimlet-tl4j</artifactId>
+      <version>0.5-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>com.google.guiceberry</groupId>
       <artifactId>guiceberry</artifactId>

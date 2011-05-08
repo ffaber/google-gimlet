@@ -3,17 +3,18 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.google.gimlet.inject</groupId>
-    <artifactId>inject-parent</artifactId>
+    <groupId>com.google.gimlet.testing</groupId>
+    <artifactId>testing-parent</artifactId>
     <version>0.5-SNAPSHOT</version>
   </parent>
 
-  <artifactId>gimlet-legprovider</artifactId>
-  <name>gimlet-legprovider</name>
+  <artifactId>gimlet-tl4j</artifactId>
+  <name>gimlet-tl4j</name>
   <url>http://maven.apache.org</url>
   <packaging>jar</packaging>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+
 </project>

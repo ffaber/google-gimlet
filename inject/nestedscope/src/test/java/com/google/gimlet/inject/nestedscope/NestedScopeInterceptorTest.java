@@ -2,7 +2,7 @@
 
 package com.google.gimlet.inject.nestedscope;
 
-import static com.google.common.testing.junit3.JUnitAsserts.assertContainsRegex;
+import static com.google.gimlet.testing.tl4j.JUnitAsserts.assertContainsRegex;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.easymock.EasyMock.expect;
 
@@ -229,7 +229,7 @@ public class NestedScopeInterceptorTest extends TestCase {
           methodInvocation, bindingFrame);
       fail("Expected to see an exception for lack of @NestedScoped");
     } catch (IllegalArgumentException iae) {
-      JUnitAsserts.assertContainsRegex(
+      assertContainsRegex(
           "Unscoped method passed to the NestedScopeInterceptor",
           iae.getMessage());
     }
@@ -260,7 +260,7 @@ public class NestedScopeInterceptorTest extends TestCase {
       fail("Expected to see an exception because the method has a parameter " +
           "that has two BindingAnnotations on it.");
     } catch (IllegalArgumentException iae) {
-      JUnitAsserts.assertContainsRegex(
+      assertContainsRegex(
           "There must be no more than one binding annotation",
           iae.getMessage());
     }
