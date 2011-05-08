@@ -4,10 +4,8 @@ package com.google.gimlet.inject.nestedscope;
 
 import static com.google.common.base.Preconditions.checkState;
 
-import com.google.inject.Inject;
 import com.google.inject.Key;
 import com.google.inject.Provider;
-import com.google.inject.Singleton;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,7 +15,6 @@ import java.util.logging.Logger;
  *
  * @author ffaber@gmail.com (Fred Faber)
  */
-@Singleton
 final class NestedScopeImpl implements NestedScope {
 
   private static final Logger logger =
@@ -35,7 +32,7 @@ final class NestedScopeImpl implements NestedScope {
   /** Used to create new instances of {@link BindingFrame} within a new scope */
   private final Provider<BindingFrame> bindingFrameProvider;
 
-  @Inject NestedScopeImpl(Provider<BindingFrame> bindingFrameProvider) {
+  NestedScopeImpl(Provider<BindingFrame> bindingFrameProvider) {
     this.bindingFrameProvider = bindingFrameProvider;
   }
 
@@ -79,7 +76,8 @@ final class NestedScopeImpl implements NestedScope {
   }
 
   /**
-   * {@inheritDoc} This implementation of {@link #enterNew()} of the {@link
+   * {@inheritDoc}
+   * <p> This implementation of {@link #enterNew()} of the {@link
    * NestedScope} interface guards against any unclosed nested scopes.
    * Specifically, it resets the nested scope to contain a new binding frame.
    */
@@ -99,13 +97,19 @@ final class NestedScopeImpl implements NestedScope {
 
   @Override public void enter(ScopeId scopeId) {
     BindingFrame newBindingFrame = bindingFrameProvider.get();
-    Key<ScopeId> scopeKey = Key.get(ScopeId.class, ScopeIdKey.class);
-    // TODO(ffaber): decide whether to allow entering a scope that is already
-    // on the stack.
+    getBindingFrameStack().getBindingFrames();
+    for (BindingFrame bindingFrame :
+        getBindingFrameStack().getBindingFrames()) {
+      ScopeId outerScopeId = bindingFrame.get(BindingFrame.SCOPE_ID_KEY);
+      if (outerScopeId.equals(scopeId)) {
+        throw new IllegalArgumentException(String.format(
+            "ScopeId %s already used within frame %s", scopeId, bindingFrame));
+      }
+    }
 
-    // store the scope id in a special key in the binding frame. since the
+    // Store the scope id in a special key in the binding frame. since the
     // annotation is package private, no one should have access to it.
-    newBindingFrame.put(scopeKey, scopeId);
+    newBindingFrame.put(BindingFrame.SCOPE_ID_KEY, scopeId);
     enterScope(newBindingFrame);
   }
 

@@ -31,6 +31,9 @@ public interface NestedScope extends Scope {
    * a new unit of work, because those methods will check whether the current
    * thread is already within a unit of work.  Hence, this method must be
    * used to enter a nested unit of work.
+   * <p>
+   * If the given {@link ScopeId} is a duplicate of an outer scope, then an
+   * {@link IllegalArgumentException} is thrown.
    */
   void enter(ScopeId scopeId);
 

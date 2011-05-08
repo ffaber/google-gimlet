@@ -3,8 +3,13 @@
 package com.google.gimlet.inject.nestedscope;
 
 import com.google.common.collect.Maps;
+import com.google.inject.BindingAnnotation;
 import com.google.inject.Key;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.Map;
 
 /**
@@ -15,6 +20,12 @@ import java.util.Map;
  * @author ffaber@gmail.com (Fred Faber)
  */
 final class BindingFrame {
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target({ ElementType.FIELD, ElementType.PARAMETER })
+  @BindingAnnotation
+  private @interface PrivateAnnotationForScopeIdKey{ }
+  final static Key<ScopeId> SCOPE_ID_KEY =
+      Key.get(ScopeId.class, PrivateAnnotationForScopeIdKey.class);
 
   private final Map<Key<?>, Object> scopedValues;
 
@@ -29,17 +40,18 @@ final class BindingFrame {
    * if it is the value associated wtih the key <em>or</em> if no value is
    * associated with the key.
    */
-  @SuppressWarnings({ "unchecked" }) <T> T put(Key<T> key, T value) {
+  @SuppressWarnings({ "unchecked" })
+  <T> T put(Key<T> key, T value) {
     return (T) scopedValues.put(key, value);
   }
 
   /** Returns a scoped value for the given key, if one exists */
-  @SuppressWarnings({ "unchecked" }) <T> T get(Key<T> key) {
+  @SuppressWarnings({ "unchecked" })
+  <T> T get(Key<T> key) {
     return (T) scopedValues.get(key);
   }
 
-  @Override
-  public String toString() {
+  @Override public String toString() {
     return "BindingFrame consists of:\n" + scopedValues.toString();
   }
 }
