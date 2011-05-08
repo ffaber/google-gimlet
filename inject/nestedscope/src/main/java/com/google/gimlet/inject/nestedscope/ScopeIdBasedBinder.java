@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * This binder makes it simple to configure {@link ScopeId}-based }bindings.
+ * This binder makes it simple to configure {@link ScopeId}-based bindings.
  * Some usage examples are below.
  * <p>
  * The example below assumes that the sample code is part of the configuration
@@ -45,8 +45,7 @@ import java.util.Set;
  * from calls to {@code bind()} is not fully implemented.
  *
  */
-public class ScopeIdBasedBinder {
-
+public final class ScopeIdBasedBinder {
   /**
    * This set contains the {@link Key}s that have been seen for the
    * configuration of a single {@code Injector}. This set is cleared via
@@ -180,42 +179,36 @@ public class ScopeIdBasedBinder {
 
     // --- methods below are not implemented ---
 
-    @Override
-    public void toInstance(T instance) {
+    @Override public void toInstance(T instance) {
       throw new UnsupportedOperationException();
     }
 
-    @Override
-    public ScopedBindingBuilder toProvider(Provider<? extends T> provider) {
+    @Override public ScopedBindingBuilder toProvider(
+        Provider<? extends T> provider) {
       throw new UnsupportedOperationException();
     }
 
-    @Override
-    public ScopedBindingBuilder toProvider(
+    @Override public ScopedBindingBuilder toProvider(
         Class<? extends javax.inject.Provider<? extends T>> providerType) {
       throw new UnsupportedOperationException();
     }
 
-    @Override
-    public ScopedBindingBuilder toProvider(
+    @Override public ScopedBindingBuilder toProvider(
         TypeLiteral<? extends javax.inject.Provider<? extends T>> type) {
       throw new UnsupportedOperationException();
     }
 
-    @Override
-    public ScopedBindingBuilder toProvider(
+    @Override public ScopedBindingBuilder toProvider(
         Key<? extends javax.inject.Provider<? extends T>> providerKey) {
       throw new UnsupportedOperationException();
     }
 
-    @Override
-    public <S extends T> ScopedBindingBuilder toConstructor(
+    @Override public <S extends T> ScopedBindingBuilder toConstructor(
         Constructor<S> constructor) {
       throw new UnsupportedOperationException();
     }
 
-    @Override
-    public <S extends T> ScopedBindingBuilder toConstructor(
+    @Override public <S extends T> ScopedBindingBuilder toConstructor(
         Constructor<S> constructor,
         TypeLiteral<? extends S> type) {
       throw new UnsupportedOperationException();
