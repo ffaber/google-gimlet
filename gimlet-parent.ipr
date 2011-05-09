@@ -266,7 +266,6 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/all/all.iml" filepath="$PROJECT_DIR$/all/all.iml" />
       <module fileurl="file://$PROJECT_DIR$/collect/collect.iml" filepath="$PROJECT_DIR$/collect/collect.iml" />
       <module fileurl="file://$PROJECT_DIR$/testing/easymock/gimlet-easymock.iml" filepath="$PROJECT_DIR$/testing/easymock/gimlet-easymock.iml" />
       <module fileurl="file://$PROJECT_DIR$/inject/legprovider/gimlet-legprovider.iml" filepath="$PROJECT_DIR$/inject/legprovider/gimlet-legprovider.iml" />
@@ -274,7 +273,8 @@
       <module fileurl="file://$PROJECT_DIR$/gimlet-parent.iml" filepath="$PROJECT_DIR$/gimlet-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/testing/tl4j/gimlet-tl4j.iml" filepath="$PROJECT_DIR$/testing/tl4j/gimlet-tl4j.iml" />
       <module fileurl="file://$PROJECT_DIR$/graph/graph.iml" filepath="$PROJECT_DIR$/graph/graph.iml" />
-      <module fileurl="file://$PROJECT_DIR$/inject/inject.iml" filepath="$PROJECT_DIR$/inject/inject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/inject/inject-parent.iml" filepath="$PROJECT_DIR$/inject/inject-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/parallel/parallel.iml" filepath="$PROJECT_DIR$/parallel/parallel.iml" />
       <module fileurl="file://$PROJECT_DIR$/reflect/reflect.iml" filepath="$PROJECT_DIR$/reflect/reflect.iml" />
       <module fileurl="file://$PROJECT_DIR$/testing/testing-parent.iml" filepath="$PROJECT_DIR$/testing/testing-parent.iml" />
     </modules>
@@ -435,6 +435,39 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: net.sf.jung:jung-api:2.0.1">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/net/sf/jung/jung-api/2.0.1/jung-api-2.0.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/net/sf/jung/jung-api/2.0.1/jung-api-2.0.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/net/sf/jung/jung-api/2.0.1/jung-api-2.0.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: net.sf.jung:jung-graph-impl:2.0.1">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/net/sf/jung/jung-graph-impl/2.0.1/jung-graph-impl-2.0.1.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/net/sf/jung/jung-graph-impl/2.0.1/jung-graph-impl-2.0.1-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/net/sf/jung/jung-graph-impl/2.0.1/jung-graph-impl-2.0.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: net.sourceforge.collections:collections-generic:4.01">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/net/sourceforge/collections/collections-generic/4.01/collections-generic-4.01.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/net/sourceforge/collections/collections-generic/4.01/collections-generic-4.01-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/net/sourceforge/collections/collections-generic/4.01/collections-generic-4.01-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.easymock:easymock:3.0">
