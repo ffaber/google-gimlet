@@ -16,6 +16,8 @@
 
 package com.google.gimlet.testing.tl4j;
 
+import com.google.common.collect.HashMultiset;
+
 import junit.framework.Assert;
 
 import java.util.ArrayList;
@@ -173,6 +175,39 @@ public final class JUnitAsserts {
   public static void assertContentsInOrder(
       Iterable<?> actual, Object... expected) {
     assertContentsInOrder((String) null, actual, expected);
+  }
+
+  /**
+   * Asserts that {@code actual} contains precisely the elements
+   * {@code expected}, in any order.
+   */
+  public static void assertContentsAnyOrder(
+      String message, Iterable<?> actual, Object... expected) {
+    Assert.assertEquals(message,
+        HashMultiset.create(Arrays.asList(expected)),
+        HashMultiset.create(actual));
+  }
+
+  /**
+   * Variant of {@link #assertContentsAnyOrder(String,Iterable,Object...)}
+   * using a generic message.
+   */
+  public static void assertContentsAnyOrder(
+      Iterable<?> actual, Object... expected) {
+    assertContentsAnyOrder((String) null, actual, expected);
+  }
+
+  /** Asserts that the given {@link Iterable} is empty */
+  public static void assertEmpty(String message, Iterable<?> iterable) {
+    if (iterable.iterator().hasNext()) {
+      failWithMessage(message, "expected to be empty, but contained: <"
+          + iterable.toString());
+    }
+  }
+
+  /** Variant of {@link #assertEmpty(String, Iterable)} using a null message. */
+  public static void assertEmpty(Iterable<?> iterable) {
+    assertEmpty((String) null, iterable);
   }
 
   private static Matcher getMatcher(String expectedRegex, String actual) {
