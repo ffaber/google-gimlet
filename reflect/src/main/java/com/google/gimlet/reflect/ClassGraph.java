@@ -35,8 +35,13 @@ import java.util.Queue;
  */
 public final class ClassGraph {
 
-  private final Map<Class<?>, List<Class<?>>> nodesToParents
-      = DefaultingMaps.newListValuedMap();
+  private final Map<Class<?>, List<Class<?>>> nodesToParents;
+
+  public ClassGraph() {
+    nodesToParents = DefaultingMaps.newListValuedMap();
+    // We always seed the graph with Object to cover the degenerate case.
+    nodesToParents.get(Object.class);
+  }
 
   public boolean containsNode(Class<?> node) {
     return nodesToParents.containsKey(node);
