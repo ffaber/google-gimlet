@@ -73,6 +73,10 @@ public class GetClassGraphTest extends TestCase {
         Object.class);
   }
 
+  public void testGetClassGraph_degenerativeCaseOfObject() {
+    List<Class<?>> graphLabels = getBreadthFirstVistedLabels(Object.class);
+    assertContentsInOrder(graphLabels, Object.class);
+  }
 
   private List<Class<?>> getBreadthFirstVistedLabels(Class<?> rootClass) {
     GetClassGraph getClassGraph = new GetClassGraph();
