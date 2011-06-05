@@ -16,6 +16,36 @@ import java.util.Map;
  */
 class DefaultMethodInvoker implements MethodInvoker {
 
+  @Override public <T> T invokeMethod(
+      String methodName, Object target,
+      Class<T> returnClassType, Object... args) {
+    Method method;
+    try {
+      method = target.getClass().getMethod(methodName);
+      method.setAccessible(true);
+      Object result = method.invoke(target, args);
+
+      if (result != null && !returnClassType.isInstance(result)) {
+        throw new MethodInvocationException(String.format(
+            "[%s] is not an instance of [%s]",
+            result.getClass(), returnClassType));
+      }
+      return returnClassType.cast(result);
+    } catch (NoSuchMethodException e) {
+      throw new RuntimeException(String.format(
+          "Couldn't invoke method [%s] on target [%s] of class [%s]",
+          methodName, target, target.getClass()));
+    } catch (InvocationTargetException e) {
+      throw new RuntimeException(String.format(
+          "Couldn't invoke method [%s] on target [%s] of class [%s]",
+          methodName, target, target.getClass()));
+    } catch (IllegalAccessException e) {
+      throw new RuntimeException(String.format(
+          "Couldn't invoke method [%s] on target [%s] of class [%s]",
+          methodName, target, target.getClass()));
+    }
+  }
+
   @Override public Map<Method, Object> invokeMethods(
       Iterable<Method> methods, Object target) {
 

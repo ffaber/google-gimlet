@@ -15,7 +15,7 @@ import java.lang.reflect.Method;
  * 
  * @author ffaber@gmail.com (Fred Faber)
  */
-public class ClassDefinitionHolderTestCase extends TestCase {
+public abstract class ClassDefinitionHolderTestCase extends TestCase {
 
   /**
    * This predicate rejects methods that are declared on {@link Object}

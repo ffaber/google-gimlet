@@ -19,6 +19,7 @@ package com.google.gimlet.reflect;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.gimlet.collect.DefaultingMaps;
 
@@ -54,7 +55,7 @@ public final class ClassGraph {
         "Edge from %s to %s already exists within %s", from, to, parents);
   }
 
-  public List<Class<?>> getNodesViaBreadthFirstSearch(Class<?> start) {
+  public ImmutableList<Class<?>> getNodesViaBreadthFirstSearch(Class<?> start) {
     checkArgument(
         containsNode(start),
         "Node represented by %s is not within graph %s", start, this);
@@ -76,7 +77,7 @@ public final class ClassGraph {
       }
     }
 
-    return breadthFirstVisits;
+    return ImmutableList.copyOf(breadthFirstVisits);
   }
 
   @Override public String toString() {
