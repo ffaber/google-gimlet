@@ -2,6 +2,8 @@
 
 package com.google.gimlet.reflect;
 
+import static com.google.gimlet.testing.tl4j.GimletAsserts.assertSize;
+
 import junit.framework.TestCase;
 
 import java.lang.annotation.Annotation;
@@ -93,8 +95,7 @@ public class BasicReflectionTest extends TestCase {
     for (Method method : methods) {
       if (method.getName().equals("call")) {
         List<Annotation> annotations = Arrays.asList(method.getAnnotations());
-        assertEquals("Expect only one: " + annotations, 1, annotations.size());
-        assertSame(MerryMethodToCall.class, annotations.get(0).getClass());
+        assertSize(0, annotations);
       }
     }
   }
