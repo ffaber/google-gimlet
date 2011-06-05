@@ -10,10 +10,8 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import edu.uci.ics.jung.graph.Graph;
-
 /**
- * Returns a {@link Graph} that represents the class hierarchy, starting at
+ * Returns a {@link ClassGraph} that represents the class hierarchy, starting at
  * a given source class.
  * <p>
  * The returned graph includes links to all parent classes and implemented
