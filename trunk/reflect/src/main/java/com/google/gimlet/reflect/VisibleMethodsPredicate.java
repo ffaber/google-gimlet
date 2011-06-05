@@ -21,11 +21,11 @@ import java.lang.reflect.Modifier;
  *
  * @author ffaber@gmail.com (Fred Faber)
  */
-class AcceptVisibleMethods implements Predicate<Method> {
+class VisibleMethodsPredicate implements Predicate<Method> {
 
   private final Class<?> sourceClass;
 
-  AcceptVisibleMethods(Class<?> sourceClass) {
+  VisibleMethodsPredicate(Class<?> sourceClass) {
     this.sourceClass = sourceClass;
   }
 
