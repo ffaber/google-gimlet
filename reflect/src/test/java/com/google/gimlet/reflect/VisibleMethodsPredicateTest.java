@@ -12,16 +12,16 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 /**
- * Tests the {@link AcceptVisibleMethods} class.
+ * Tests the {@link VisibleMethodsPredicate} class.
  *
  * @author ffaber@gmail.com (Fred Faber)
  */
-public class AcceptVisibleMethodsTest
+public class VisibleMethodsPredicateTest
     extends ClassDefinitionHolderTestCase {
 
   public void testGetMethods_testingSubpackageClass() throws Exception {
-    AcceptVisibleMethods acceptVisibleMethods =
-        new AcceptVisibleMethods(TestingSubpackageTestClass.class);
+    VisibleMethodsPredicate visibleMethodsPredicate =
+        new VisibleMethodsPredicate(TestingSubpackageTestClass.class);
 
     Iterable<Method> actualAllowedMethods =
         Iterables.filter(
@@ -31,7 +31,7 @@ public class AcceptVisibleMethodsTest
                 Arrays.asList(TestAbstractClass.class.getDeclaredMethods()),
                 Arrays.asList(TestInterface.class.getDeclaredMethods()),
                 Arrays.asList(UnrelatedTestClass.class.getDeclaredMethods())),
-            acceptVisibleMethods);
+            visibleMethodsPredicate);
 
     assertContentsAnyOrder(
         actualAllowedMethods,
@@ -45,8 +45,8 @@ public class AcceptVisibleMethodsTest
   }
 
   public void testGetMethods_abstractParentClass() throws Exception {
-    AcceptVisibleMethods acceptVisibleMethods =
-        new AcceptVisibleMethods(TestAbstractClass.class);
+    VisibleMethodsPredicate visibleMethodsPredicate =
+        new VisibleMethodsPredicate(TestAbstractClass.class);
 
     Iterable<Method> actualAllowedMethods =
         Iterables.filter(
@@ -56,7 +56,7 @@ public class AcceptVisibleMethodsTest
                 Arrays.asList(TestAbstractClass.class.getDeclaredMethods()),
                 Arrays.asList(TestInterface.class.getDeclaredMethods()),
                 Arrays.asList(UnrelatedTestClass.class.getDeclaredMethods())),
-            acceptVisibleMethods);
+            visibleMethodsPredicate);
 
     assertContentsAnyOrder(
         actualAllowedMethods,
@@ -77,8 +77,8 @@ public class AcceptVisibleMethodsTest
    * visible.
    */
   public void testUnrelatedProtectedMethod() throws Exception {
-    AcceptVisibleMethods acceptVisibleMethods =
-        new AcceptVisibleMethods(TestingSubpackageTestClass.class);
-    assertFalse(acceptVisibleMethods.apply(unrelatedProtectedMethod));
+    VisibleMethodsPredicate visibleMethodsPredicate =
+        new VisibleMethodsPredicate(TestingSubpackageTestClass.class);
+    assertFalse(visibleMethodsPredicate.apply(unrelatedProtectedMethod));
   }
 }
