@@ -10,8 +10,7 @@
 
   <artifactId>gimlet-legprovider</artifactId>
   <name>gimlet-legprovider</name>
-  <url>http://maven.apache.org</url>
-  <packaging>jar</packaging>
+  <version>0.5-SNAPSHOT</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
