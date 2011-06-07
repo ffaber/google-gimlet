@@ -2,6 +2,9 @@
 
 package com.google.gimlet.reflect;
 
+import com.google.common.collect.ImmutableList;
+
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Map;
 
@@ -25,5 +28,20 @@ public final class GimletReflections {
   public static Map<Method, Object> invokeMethods(
       Iterable<Method> methods, Object target) {
     return METHOD_INVOKER.invokeMethods(methods, target);
+  }
+
+  private static final AnnotatedMethodExtractor ANNOTATED_METHOD_EXTRACTOR =
+      new DefaultAnnotatedMethodExtractor();
+
+  /**
+   *@see AnnotatedMethodExtractor#extractAllAnnotatedMethods(Class, Class) for
+   * details on this method.
+   * <p>
+   * Prefer injection over this static reference where possible.
+   */
+  public static ImmutableList<Method> extractAllAnnotatedMethods(
+      Class<?> clazz, Class<? extends Annotation> annotationClass) {
+    return ANNOTATED_METHOD_EXTRACTOR.extractAllAnnotatedMethods(
+        clazz, annotationClass);
   }
 }

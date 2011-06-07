@@ -19,6 +19,8 @@ import java.util.Map;
  *
  * @author ffaber@gmail.com (Fred Faber)
  */
+// TODO(ffaber): restore functionality to this class
+@Deprecated // to indicate to potential users that this class not operational
 public class TestNestedScope implements NestedScope {
 
   private final ThreadLocal<Map<Key<?>, Object>> scopedObjects =
