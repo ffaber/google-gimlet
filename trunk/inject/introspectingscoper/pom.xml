@@ -15,4 +15,25 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.google.gimlet.inject</groupId>
+      <artifactId>gimlet-nestedscope</artifactId>
+      <version>0.5-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.gimlet</groupId>
+      <artifactId>reflect</artifactId>
+      <version>0.5-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.gimlet.testing</groupId>
+      <artifactId>gimlet-easymock</artifactId>
+      <version>0.5-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
 </project>
