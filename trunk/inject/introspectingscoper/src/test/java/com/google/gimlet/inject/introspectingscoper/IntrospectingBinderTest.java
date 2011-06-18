@@ -75,10 +75,7 @@ public class IntrospectingBinderTest extends TestCase {
     testScope = new TestNestedScope();
   }
 
-  // TODO(ffaber): restore tests once TestNestedScope is restored
-
-  public void testNothing() { }
-  public void NO_testBindIntrospectivelyInScope() {
+  public void testBindIntrospectivelyInScope() {
     Module module = new AbstractModule() {
       @Override
       protected void configure() {
@@ -96,7 +93,7 @@ public class IntrospectingBinderTest extends TestCase {
     innerTestBindIntrospectively(module);
   }
 
-  public void NO_testBindIntrospectively() {
+  public void testBindIntrospectively() {
     Module module = new AbstractModule() {
       @Override
       protected void configure() {
