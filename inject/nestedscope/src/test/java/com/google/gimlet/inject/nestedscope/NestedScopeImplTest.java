@@ -102,7 +102,7 @@ public class NestedScopeImplTest extends TestCase {
 
   /** Tests that we can some 2 objects for the same key in different frames. */
   public void testScopeSameObject_DifferentFrames() {
-    nestedScopeImpl.enter(ValueBasedScopeId.of(NestedScopeImplTest.class));
+    nestedScopeImpl.enter(ValueBasedScopeId.of("frame 1"));
 
     Key<String> key = Key.get(String.class);
     String firstScopedValue = "first_value";
@@ -112,7 +112,7 @@ public class NestedScopeImplTest extends TestCase {
     assertEquals(firstScopedValue, nestedScopeImpl.scope(key, null).get());
 
     // Enter another scope
-    nestedScopeImpl.enter(ValueBasedScopeId.of(NestedScopeImplTest.class));
+    nestedScopeImpl.enter(ValueBasedScopeId.of("frame 2"));
     String secondScopedValue = "second_value";
     nestedScopeImpl.put(key, secondScopedValue);
 

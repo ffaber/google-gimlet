@@ -2,13 +2,19 @@
 
 package com.google.gimlet.inject.nestedscope.testing;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
+
 import com.google.common.collect.Maps;
 import com.google.gimlet.inject.nestedscope.NestedScope;
 import com.google.gimlet.inject.nestedscope.ScopeId;
 import com.google.inject.Key;
 import com.google.inject.Provider;
+import com.google.inject.Scope;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * This class provides a testing-based implementation of {@link NestedScope}. It
@@ -19,17 +25,51 @@ import java.util.Map;
  *
  * @author ffaber@gmail.com (Fred Faber)
  */
-// TODO(ffaber): restore functionality to this class
-@Deprecated // to indicate to potential users that this class not operational
 public class TestNestedScope implements NestedScope {
 
   private final ThreadLocal<Map<Key<?>, Object>> scopedObjects =
       new ThreadLocal<Map<Key<?>, Object>>();
-  // private final SimpleScope delegateScope;
+
+  class SimpleScope implements Scope {
+    final AtomicBoolean isInScope = new AtomicBoolean(false);
+
+    @Override public <T> Provider<T> scope(
+        final Key<T> key, final Provider<T> unscoped) {
+      return new Provider<T>() {
+        @Override public T get() {
+          @SuppressWarnings("unchecked")
+          T scopedObject = (T) scopedObjects.get().get(key);
+          if (scopedObject == null) {
+            scopedObject = checkNotNull(unscoped.get());
+            scopedObjects.get().put(key, scopedObject);
+          }
+          return scopedObject;
+        }
+      };
+    }
+
+    <T> void seed(Key<T> key, T value) {
+      checkState(isInScope.get());
+      checkNotNull(value);
+      scopedObjects.get().put(key, value);
+    }
+
+    void enter() {
+      checkState(!isInScope.getAndSet(true));
+      scopedObjects.set(new HashMap<Key<?>, Object>());
+    }
+
+    void exit() {
+      checkState(isInScope.getAndSet(false));
+      scopedObjects.remove();
+    }
+  }
+
+  private final SimpleScope delegateScope;
 
   public TestNestedScope() {
-    // this.delegateScope = new SimpleScope();
-    // delegateScope.enter();
+    delegateScope = new SimpleScope();
+    delegateScope.enter();
     scopedObjects.set(Maps.<Key<?>, Object>newHashMap());
   }
 
@@ -52,13 +92,12 @@ public class TestNestedScope implements NestedScope {
   @Override
   public <T> void put(Key<T> key, T object) {
     scopedObjects.get().put(key, object);
-    // delegateScope.seed(key, object);
+    delegateScope.seed(key, object);
   }
 
   @Override
   public <T> Provider<T> scope(Key<T> key, Provider<T> unscoped) {
-    // return delegateScope.scope(key, unscoped);
-    return null;
+    return delegateScope.scope(key, unscoped);
   }
 
   /** Returns all the objects scoped by the thread that created this instance */
