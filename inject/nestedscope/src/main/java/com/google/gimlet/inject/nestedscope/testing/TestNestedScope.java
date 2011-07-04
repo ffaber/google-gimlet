@@ -50,7 +50,6 @@ public class TestNestedScope implements NestedScope {
 
     <T> void seed(Key<T> key, T value) {
       checkState(isInScope.get());
-      checkNotNull(value);
       scopedObjects.get().put(key, value);
     }
 

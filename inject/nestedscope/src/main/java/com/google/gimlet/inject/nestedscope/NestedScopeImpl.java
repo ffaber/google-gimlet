@@ -23,6 +23,12 @@ final class NestedScopeImpl implements NestedScope {
   /** The per-thread collection of active stacks */
   private final ThreadLocal<BindingFrameStack> bindingFrameStacks =
       new ThreadLocal<BindingFrameStack>() {
+        // TODO(ffaber): I'm not sure we want this unless we have explicit logic
+        // to determine whether we're in a scope or not.  This is because we
+        // use calls like "bindingFrameStacks.get() != null" to determine
+        // whether we're in a scope, and of course it will never return null.
+        // Having this initialValue() also lets us be in a scope that has no
+        // scopeId added.
         @Override
         protected BindingFrameStack initialValue() {
           return new BindingFrameStack();
@@ -97,11 +103,10 @@ final class NestedScopeImpl implements NestedScope {
 
   @Override public void enter(ScopeId scopeId) {
     BindingFrame newBindingFrame = bindingFrameProvider.get();
-    getBindingFrameStack().getBindingFrames();
     for (BindingFrame bindingFrame :
         getBindingFrameStack().getBindingFrames()) {
       ScopeId outerScopeId = bindingFrame.get(BindingFrame.SCOPE_ID_KEY);
-      if (outerScopeId.equals(scopeId)) {
+      if (scopeId.equals(outerScopeId)) {
         throw new IllegalArgumentException(String.format(
             "ScopeId %s already used within frame %s", scopeId, bindingFrame));
       }

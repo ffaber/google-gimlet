@@ -37,7 +37,7 @@ final class BindingFrame {
   /**
    * Puts the given key, value pair into the frame and returns the value
    * previously associated with the given key.  This method returns {@code null}
-   * if it is the value associated wtih the key <em>or</em> if no value is
+   * if it is the value associated with the key <em>or</em> if no value is
    * associated with the key.
    */
   @SuppressWarnings({ "unchecked" })

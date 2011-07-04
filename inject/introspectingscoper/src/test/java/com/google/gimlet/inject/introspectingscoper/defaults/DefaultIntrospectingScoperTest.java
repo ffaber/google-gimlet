@@ -102,7 +102,7 @@ public class DefaultIntrospectingScoperTest extends TestCase {
 
   /**
    * This method invokes the scoper and verifies that the expected scoped
-   * objects are actually found.  It's a touch long but it's straighforward.
+   * objects are actually found.  It's a touch long but it's straightforward.
    */
   public void testIntrospectAndScope() throws Exception {
     ImmutableList<Method> methodsToReturn = ImmutableList.of(
