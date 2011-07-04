@@ -61,6 +61,9 @@ class NestedScopeCallable<T> implements Callable<T> {
   }
 
   @Override public T call() throws Exception {
+    // TODO(ffaber): resolve what it means to invoke call() when the outer
+    // thread is not in scope. Currently this logic allows that to happen,
+    // but I don't know if it makes sense.
     BindingFrameStack currentBindingFrames =
         nestedScopeImpl.getBindingFrameStack();
     try {
