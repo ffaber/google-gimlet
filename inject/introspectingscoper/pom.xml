@@ -4,12 +4,12 @@
 
   <parent>
     <artifactId>inject-parent</artifactId>
-    <groupId>com.google.gimlet.inject</groupId>
+    <groupId>com.google.gimlet</groupId>
     <version>0.5-SNAPSHOT</version>
   </parent>
 
-  <artifactId>gimlet-introspectingscoper</artifactId>
-  <name>gimlet-introspectingscoper</name>
+  <artifactId>inject-introspectingscoper</artifactId>
+  <name>Gimlet Inject Introspecting Scoper</name>
   <version>0.5-SNAPSHOT</version>
 
   <properties>
@@ -18,8 +18,8 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.google.gimlet.inject</groupId>
-      <artifactId>gimlet-nestedscope</artifactId>
+      <groupId>com.google.gimlet</groupId>
+      <artifactId>inject-nestedscope</artifactId>
       <version>0.5-SNAPSHOT</version>
     </dependency>
     <dependency>
@@ -29,8 +29,8 @@
     </dependency>
 
     <dependency>
-      <groupId>com.google.gimlet.testing</groupId>
-      <artifactId>gimlet-easymock</artifactId>
+      <groupId>com.google.gimlet</groupId>
+      <artifactId>testing-easymock</artifactId>
       <version>0.5-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>

@@ -3,13 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.google.gimlet.inject</groupId>
+    <groupId>com.google.gimlet</groupId>
     <artifactId>inject-parent</artifactId>
     <version>0.5-SNAPSHOT</version>
   </parent>
 
-  <artifactId>gimlet-legprovider</artifactId>
-  <name>gimlet-legprovider</name>
+  <artifactId>inject-legprovider</artifactId>
+  <name>Gimlet Inject Leg Provider</name>
   <version>0.5-SNAPSHOT</version>
 
   <properties>

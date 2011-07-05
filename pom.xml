@@ -20,7 +20,6 @@
 
   <modules>
     <module>collect</module>
-    <module>graph</module>
     <module>inject</module>
     <module>parallel</module>
     <module>reflect</module>
