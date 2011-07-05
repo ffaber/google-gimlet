@@ -29,7 +29,11 @@ import java.util.concurrent.Callable;
  * "creating" thread change after the callable is created, then this callable
  * has knowledge of that.
  * <p>
- *  A common use of this class is the emulation of
+ * It is ok for the parent thread <em>not</em> to be in scope when it creates
+ * a {@link NestedScopeCallable}.  In this model, the callable thread will not
+ * inherit anything because the parent thread doesn't have any scope context.
+ * <p>
+ * A common use of this class is the emulation of
  * {@code BindingFrameStack} inheritance from a parent thread to a child thread.
  *
  * @author ffaber@gmail.com (Fred Faber)
@@ -61,9 +65,6 @@ class NestedScopeCallable<T> implements Callable<T> {
   }
 
   @Override public T call() throws Exception {
-    // TODO(ffaber): resolve what it means to invoke call() when the outer
-    // thread is not in scope. Currently this logic allows that to happen,
-    // but I don't know if it makes sense.
     BindingFrameStack currentBindingFrames =
         nestedScopeImpl.getBindingFrameStack();
     try {
