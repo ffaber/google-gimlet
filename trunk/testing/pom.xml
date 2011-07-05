@@ -10,9 +10,10 @@
 
   <packaging>pom</packaging>
 
-  <groupId>com.google.gimlet.testing</groupId>
+  <groupId>com.google.gimlet</groupId>
   <artifactId>testing-parent</artifactId>
-  <name>testing</name>
+
+  <name>Gimlet Testing</name>
   <url>http://maven.apache.org</url>
 
   <properties>

@@ -10,7 +10,7 @@
 
   <packaging>pom</packaging>
 
-  <groupId>com.google.gimlet.inject</groupId>
+  <groupId>com.google.gimlet</groupId>
   <artifactId>inject-parent</artifactId>
   <name>inject</name>
   <url>http://maven.apache.org</url>
@@ -61,8 +61,8 @@
     </dependency>
 
     <dependency>
-      <groupId>com.google.gimlet.testing</groupId>
-      <artifactId>gimlet-tl4j</artifactId>
+      <groupId>com.google.gimlet</groupId>
+      <artifactId>testing-tl4j</artifactId>
       <version>0.5-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>

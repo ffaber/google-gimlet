@@ -273,7 +273,6 @@
       <module fileurl="file://$PROJECT_DIR$/inject/nestedscope/gimlet-nestedscope.iml" filepath="$PROJECT_DIR$/inject/nestedscope/gimlet-nestedscope.iml" />
       <module fileurl="file://$PROJECT_DIR$/gimlet-parent.iml" filepath="$PROJECT_DIR$/gimlet-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/testing/tl4j/gimlet-tl4j.iml" filepath="$PROJECT_DIR$/testing/tl4j/gimlet-tl4j.iml" />
-      <module fileurl="file://$PROJECT_DIR$/graph/graph.iml" filepath="$PROJECT_DIR$/graph/graph.iml" />
       <module fileurl="file://$PROJECT_DIR$/inject/inject-parent.iml" filepath="$PROJECT_DIR$/inject/inject-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/parallel/parallel.iml" filepath="$PROJECT_DIR$/parallel/parallel.iml" />
       <module fileurl="file://$PROJECT_DIR$/reflect/reflect.iml" filepath="$PROJECT_DIR$/reflect/reflect.iml" />
