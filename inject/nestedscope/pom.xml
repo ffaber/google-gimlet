@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>inject-nestedscope</artifactId>
-  <name>Gimelet Inject Nested Scope</name>
+  <name>Gimlet Inject Nested Scope</name>
   <version>0.5-SNAPSHOT</version>
 
   <properties>
