@@ -43,11 +43,11 @@ import java.util.logging.Logger;
  * @param <V> the type of "foos" that are being loaded.
  * @param <I> the type of id for bars so that the next id can be determined.
  */
-public abstract class MapLoadingBatchIterable<K, V, I>
-    extends ListLoadingBatchIterable<I, KeyedBatch<K, V>> {
+public abstract class MapLoadingIterable<K, V, I>
+    extends ListLoadingIterable<I, KeyedBatch<K, V>> {
 
   private static final Logger logger = 
-      Logger.getLogger(MapLoadingBatchIterable.class.getCanonicalName());
+      Logger.getLogger(MapLoadingIterable.class.getCanonicalName());
 
   /** Function that converts a map entry to a batch element. */
   private final Function<Entry<K, List<V>>, KeyedBatch<K, V>>
@@ -68,7 +68,7 @@ public abstract class MapLoadingBatchIterable<K, V, I>
    * to decorate this call.
    * @param batchSize The max number of "foos" that get returned for a given
    */
-  protected MapLoadingBatchIterable(
+  protected MapLoadingIterable(
       I initialValue,
       CallableTransform loadCallableTransform,
       Integer batchSize) {

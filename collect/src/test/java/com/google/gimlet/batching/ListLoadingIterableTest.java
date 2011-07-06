@@ -29,10 +29,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Tests for {@link ListLoadingBatchIterable}.
+ * Tests for {@link ListLoadingIterable}.
  *
  */
-public class ListLoadingBatchIterableTest extends TestCase {
+public class ListLoadingIterableTest extends TestCase {
 
   public void testWithEmptyBatches() {
     assertWithBatches(ImmutableMap.<String, Integer>of(),
@@ -79,8 +79,8 @@ public class ListLoadingBatchIterableTest extends TestCase {
 
   private void assertWithBatches(Map<String, Integer> nextIds,
       Map<Integer, List<String>> batches, String... results) {
-    TestListLoadingBatchIterable testListLoadingBatchIterable
-        = new TestListLoadingBatchIterable(nextIds, batches);
+    TestListLoadingIterable testListLoadingBatchIterable
+        = new TestListLoadingIterable(nextIds, batches);
 
     JUnitAsserts.assertContentsInOrder(
         testListLoadingBatchIterable,
@@ -89,8 +89,8 @@ public class ListLoadingBatchIterableTest extends TestCase {
 
   // Simple extension of ListLoadingBatchIterable to allow us to test
   // the behavior.
-  private static class TestListLoadingBatchIterable extends
-      ListLoadingBatchIterable<Integer, String> {
+  private static class TestListLoadingIterable extends
+      ListLoadingIterable<Integer, String> {
 
     /**
      * Map containing what should be returned as the next id given the previous
@@ -104,7 +104,7 @@ public class ListLoadingBatchIterableTest extends TestCase {
      */
     private final Map<Integer, List<String>> batches;
 
-    private TestListLoadingBatchIterable(
+    private TestListLoadingIterable(
         Map<String, Integer> nextIds,
         Map<Integer, List<String>> batches) {
       super(0, CallableTransforms.getIdentityTransform());

@@ -40,7 +40,7 @@ import java.util.concurrent.Callable;
  * @param <I> represents the type of id that are used in fetching.
  * @param <T> represents the type of objects that being loaded.
  */
-public abstract class ListLoadingBatchIterable<I, T>
+public abstract class ListLoadingIterable<I, T>
     implements Iterable<T> {
 
   private final I initialValue;
@@ -54,7 +54,7 @@ public abstract class ListLoadingBatchIterable<I, T>
    * calls {@link #loadNextBatch(Object)}  that so that one may decorate it with
    * specific logic such as loading in a separate thread.
    */
-  public ListLoadingBatchIterable(
+  public ListLoadingIterable(
       I initialValue,
       CallableTransform loadingCallableTransform) {
     this.initialValue = initialValue;
@@ -82,7 +82,7 @@ public abstract class ListLoadingBatchIterable<I, T>
 
     /**
      * Holds the next id that we'll use to
-     * {@link ListLoadingBatchIterable#loadNextBatch(Object)}.
+     * {@link ListLoadingIterable#loadNextBatch(Object)}.
      */
     I idForNextBatch;
 
