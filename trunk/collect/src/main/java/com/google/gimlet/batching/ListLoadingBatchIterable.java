@@ -28,10 +28,14 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
- * Base class that makes it possible to present a flat iterable view of
- * multiple loads that each result in their own list being loaded. Each call to
- * get the iterable will result in a new iterators that starts at the beginning
- * of the "batches" to load.
+ * Base class that makes it possible to present a flat {@link Iterable iterable}
+ * view of multiple loads of {@link List lists}.  In other words, this is a
+ * facade of an {@link Iterable iterable} over a bunch of lists.  The main use
+ * case for this is to allow for items to be loaded set-at-a-time, but to be
+ * processed one-at-a-time.
+ * <p>
+ * Each call to get the {@code iterable} returns a new
+ * {@link Iterator iterator}.
  *
  * @param <I> represents the type of id that are used in fetching.
  * @param <T> represents the type of objects that being loaded.
