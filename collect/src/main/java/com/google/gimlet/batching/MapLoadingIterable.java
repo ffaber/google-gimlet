@@ -78,7 +78,7 @@ public abstract class MapLoadingIterable<K, V, I>
 
   /**
    * Loads a batch of entries starting with the given beginIdForBatch. The sum
-   * of the sizes of values for enries should at most be batch size. One does
+   * of the sizes of values for entries should at most be batch size. One does
    * not need to worry if the "last" K (bar) according to the ordering is
    * incomplete or not. It will automatically be removed and the
    * nextIdFunction will be applied to the previous element which should result
