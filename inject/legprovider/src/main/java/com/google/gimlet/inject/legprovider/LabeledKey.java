@@ -24,21 +24,26 @@ import com.google.inject.Key;
  * A container that holds a {@link Key} and its associated string label.
  *
  */
-final class LabeledKey {
+final class LabeledKey<T> {
 
-  private final Key<?> key;
+  private static final String DEFAULT_LABEL_VALUE = "";
+  private final Key<T> key;
   private final String label;
 
-  static LabeledKey of(Key<?> key, String label) {
-    return new LabeledKey(key, label);
+  static <T> LabeledKey of(Key<T> key) {
+    return new LabeledKey<T>(key, DEFAULT_LABEL_VALUE);
   }
 
-  private LabeledKey(Key<?> key, String label) {
+  static <T> LabeledKey of(Key<T> key, String label) {
+    return new LabeledKey<T>(key, label);
+  }
+
+  private LabeledKey(Key<T> key, String label) {
     this.key = key;
     this.label = label;
   }
 
-  public Key<?> getKey() {
+  public Key<T> getKey() {
     return key;
   }
 

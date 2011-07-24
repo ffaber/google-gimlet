@@ -54,14 +54,15 @@ class LegBinder<T> {
 
   private final Constructor constructor;
   private final TypeLiteral<? extends T> implementationType;
-  private final Map<Key<?>, Key<?>> configKeyToValueKeyMap;
+  private final Map<Key<?>, KeyOrInstanceUnionWithLabel<?>>
+      configKeyToValueUnionMap;
 
   LegBinder(
       TypeLiteral<? extends T> implementationType,
-      Set<LabeledKey> labeledValueKeys) {
+      Set<KeyOrInstanceUnionWithLabel<?>> valueSet) {
     this.implementationType = implementationType;
 
-    // TODO(amatveev): Consider implementing support for AssistedInject
+    // TODO: Consider implementing support for AssistedInject
     // constructors. The challenge lies in writing code that will find matching
     // constructors based on types and labels.
     // Find a matching constructor
@@ -73,22 +74,30 @@ class LegBinder<T> {
 
     // We need to create some configuration keys (aka keys that appear on the
     // constructor of the implementation class).
-    this.configKeyToValueKeyMap =
-        mapConfigKeysToValueKeys(constructor, labeledValueKeys);
+    this.configKeyToValueUnionMap =
+        mapConfigKeysToValueUnions(constructor, valueSet);
   }
 
   /**
-   * This method maps the {@link Key keys} given to the {@code using()} method
-   * of {@link LegModuleBuilder} to the {@link Assisted} parameters on the
+   * This method maps the {@link Key keys} given to the {@code using()} methods
+   * of {@link LegModuleBuilder} to the {@link Leg} parameters on the
    * constructor of the target class.
+   * <p>
+   * Note that this doesn't really need to return the union of <em>labeled</em>
+   * keys and instances, because no code beyond this method actually cares
+   * about the label.  This is done mainly for re-use of the data structure.
+   * If we were more pedantic, this method would return a [key, instance]
+   * union.
    */
-  private Map<Key<?>, Key<?>> mapConfigKeysToValueKeys(
-      Constructor constructor, Set<LabeledKey> labeledValueKeys) {
+  private Map<Key<?>, KeyOrInstanceUnionWithLabel<?>> mapConfigKeysToValueUnions(
+      Constructor constructor,
+      Set<KeyOrInstanceUnionWithLabel<?>> valueSet) {
     Type[] paramTypes = constructor.getGenericParameterTypes();
     Class<?>[] paramClasses = constructor.getParameterTypes();
     Annotation[][] paramAnnotations = constructor.getParameterAnnotations();
 
-    Map<Key<?>, Key<?>> configKeyToValueKeyMap = Maps.newHashMap();
+    Map<Key<?>, KeyOrInstanceUnionWithLabel<?>> configKeyToValueUnionMap =
+        Maps.newHashMap();
 
     // Extract the configuration keys
     Map<LabeledKey, Key<?>> configLabeledKeyToConfigKeyMap = Maps.newHashMap();
@@ -125,50 +134,65 @@ class LegBinder<T> {
         ImmutableSet.copyOf(configLabeledKeyToConfigKeyMap.values());
 
     checkState(
-        configKeysForLogging.size() == labeledValueKeys.size(),
+        configKeysForLogging.size() == valueSet.size(),
         "The number of value keys does not match the number of configuration "
         + "keys. Number of value keys: %s Number of configuration keys: %s",
-        configKeysForLogging.size(), labeledValueKeys.size());
+        configKeysForLogging.size(), valueSet.size());
 
-    for (LabeledKey labeledValueKey : labeledValueKeys) {
-      Key<?> valueKey = labeledValueKey.getKey();
-      LabeledKey configLookupKey = LabeledKey.of(
-          Key.get(valueKey.getTypeLiteral()), labeledValueKey.getLabel());
+    for (KeyOrInstanceUnionWithLabel<?> keyOrInstanceUnionWithLabel : valueSet) {
+      final LabeledKey<?> configLookupKey;
+      if (keyOrInstanceUnionWithLabel.key != null) {
+        configLookupKey = LabeledKey.of(
+            Key.get(keyOrInstanceUnionWithLabel.key.getTypeLiteral()),
+            keyOrInstanceUnionWithLabel.label);
+      } else {
+        // TODO: we might want to get a little more clever with generic types
+        Key<?> key = Key.get(keyOrInstanceUnionWithLabel.instance.getClass());
+        configLookupKey = LabeledKey.of(key, keyOrInstanceUnionWithLabel.label);
+      }
 
       Key<?> configKey = checkNotNull(
           configLabeledKeyToConfigKeyMap.get(configLookupKey),
-          "Value key %s does not have a corresponding configuration key in %s",
-          labeledValueKey, configKeysForLogging);
+          "\nValue key %s\n"
+           + "does not have a corresponding configuration key in:\n"
+           + "%s",
+          configLookupKey, configKeysForLogging);
       configLabeledKeyToConfigKeyMap.remove(configLookupKey);
 
-      configKeyToValueKeyMap.put(configKey, valueKey);
+      configKeyToValueUnionMap.put(configKey, keyOrInstanceUnionWithLabel);
     }
 
     checkState(
         configLabeledKeyToConfigKeyMap.isEmpty(),
         "Config keys %s did not have a matching value key in %s",
         configLabeledKeyToConfigKeyMap.values(),
-        labeledValueKeys);
+        valueSet);
 
-    return configKeyToValueKeyMap;
+    return configKeyToValueUnionMap;
   }
 
-  Module bindTo(final Key<T> returnType) {
+  Module bindTo(final Key<T> returnValueKey) {
     return new PrivateModule() {
       @SuppressWarnings({ "unchecked", "RedundantCast" })
       // raw keys are necessary for the args array and return value
       @Override protected void configure() {
         Binder binder = binder();
 
-        for (Key<?> configKey : configKeyToValueKeyMap.keySet()) {
-          binder.bind(configKey)
-              .to((Key) configKeyToValueKeyMap.get(configKey));
+        for (Key<?> configKey : configKeyToValueUnionMap.keySet()) {
+          KeyOrInstanceUnionWithLabel<?> unionWithLabel =
+              configKeyToValueUnionMap.get(configKey);
+
+          if (unionWithLabel.key != null) {
+            binder.bind((Key) configKey).to(unionWithLabel.key);
+          } else {
+            binder.bind((Key) configKey).toInstance(unionWithLabel.instance);
+          }
         }
 
-        binder.bind(returnType)
+        binder.bind(returnValueKey)
             .toConstructor(constructor, (TypeLiteral) implementationType);
 
-        expose(returnType);
+        expose(returnValueKey);
       }
     };
   }
