@@ -63,7 +63,7 @@ public class LegModuleBuilderTest extends TestCase {
     @Inject
     OneConfigurableParam(
         Double nonConfigurableParam,
-        @Leg Integer configurableParam) {
+        @Foot Integer configurableParam) {
       this.nonConfigurableParam = nonConfigurableParam;
       this.configurableParam = configurableParam;
     }
@@ -87,8 +87,8 @@ public class LegModuleBuilderTest extends TestCase {
 
     @Inject TwoConfigurableParams(
         Double nonConfigurableParam,
-        @Leg Integer configurableParam1,
-        @Leg String configurableParam2) {
+        @Foot Integer configurableParam1,
+        @Foot String configurableParam2) {
       this.nonConfigurableParam = nonConfigurableParam;
       this.configurableParam1 = configurableParam1;
       this.configurableParam2 = configurableParam2;
@@ -103,8 +103,8 @@ public class LegModuleBuilderTest extends TestCase {
 
     @Inject TwoConfigurableParamsOfSameType(
         Double nonConfigurableParam,
-        @Leg("one") Integer configurableParam1,
-        @Leg("otherone") Integer configurableParam2) {
+        @Foot("one") Integer configurableParam1,
+        @Foot("otherone") Integer configurableParam2) {
       this.nonConfigurableParam = nonConfigurableParam;
       this.configurableParam1 = configurableParam1;
       this.configurableParam2 = configurableParam2;
@@ -118,7 +118,7 @@ public class LegModuleBuilderTest extends TestCase {
 
     @Inject ConfigurableParameterThroughProvider(
         Double nonConfigurableParam,
-        @Leg Provider<Integer> configurableParamProvider) {
+        @Foot Provider<Integer> configurableParamProvider) {
       this.nonConfigurableParam = nonConfigurableParam;
       this.configurableParam = configurableParamProvider.get();
     }
@@ -127,10 +127,10 @@ public class LegModuleBuilderTest extends TestCase {
   private static class MoreThanOneConstructorMarkedWithInject {
 
     @Inject MoreThanOneConstructorMarkedWithInject(
-        @Leg Integer configurableParam) {}
+        @Foot Integer configurableParam) {}
 
     @Inject MoreThanOneConstructorMarkedWithInject(
-        @Leg String configurableParam) {}
+        @Foot String configurableParam) {}
   }
 
   @Retention(RetentionPolicy.RUNTIME)

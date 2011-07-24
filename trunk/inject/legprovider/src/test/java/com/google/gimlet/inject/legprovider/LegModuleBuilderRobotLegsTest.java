@@ -5,7 +5,6 @@ package com.google.gimlet.inject.legprovider;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.BindingAnnotation;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
@@ -79,7 +78,7 @@ public class LegModuleBuilderRobotLegsTest extends TestCase {
   static class Leg {
     private final Foot foot;
 
-    @Inject Leg(@com.google.gimlet.inject.legprovider.Leg Foot foot) {
+    @Inject Leg(@com.google.gimlet.inject.legprovider.Foot Foot foot) {
       this.foot = foot;
     }
 

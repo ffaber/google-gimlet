@@ -47,7 +47,7 @@ import java.util.Set;
  * particular profile of a target class.  This "profile" is defined by the
  * set of values given as {@link LabeledKey}s, each of which corresponds to
  * a constructor parameter on the target class that is annotated with
- * {@link Leg}.
+ * {@link Foot}.
  *
  */
 class LegBinder<T> {
@@ -80,7 +80,7 @@ class LegBinder<T> {
 
   /**
    * This method maps the {@link Key keys} given to the {@code using()} methods
-   * of {@link LegModuleBuilder} to the {@link Leg} parameters on the
+   * of {@link LegModuleBuilder} to the {@link Foot} parameters on the
    * constructor of the target class.
    * <p>
    * Note that this doesn't really need to return the union of <em>labeled</em>
@@ -103,7 +103,7 @@ class LegBinder<T> {
     Map<LabeledKey, Key<?>> configLabeledKeyToConfigKeyMap = Maps.newHashMap();
     for (int i = 0; i < paramTypes.length; i++) {
       for (int j = 0; j < paramAnnotations[i].length; j++) {
-        if (paramAnnotations[i][j].annotationType().equals(Leg.class)) {
+        if (paramAnnotations[i][j].annotationType().equals(Foot.class)) {
           // If the configuration type is a Provider, then we must make sure
           // to use the type of the Provider instead
           final TypeLiteral<?> configTypeLiteral;
@@ -121,7 +121,7 @@ class LegBinder<T> {
             configTypeLiteral = TypeLiteral.get(paramTypes[i]);
           }
 
-          Leg annotation = (Leg) paramAnnotations[i][j];
+          Foot annotation = (Foot) paramAnnotations[i][j];
           configLabeledKeyToConfigKeyMap.put(
               LabeledKey.of(Key.get(configTypeLiteral), annotation.value()),
               Key.get(configTypeLiteral, annotation));
