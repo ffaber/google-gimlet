@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
 
 /**
  * A constructor parameter annotated with {@code Leg} indicates that the param
- * is a "robot leg."
+ * is a foot (of potentially several feet) of a "robot leg."
  *
  * @author ffaber@gmail.com (Fred Faber)
  */
@@ -34,6 +34,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
 @BindingAnnotation
-public @interface Leg {
+public @interface Foot {
   String value() default "";
 }
