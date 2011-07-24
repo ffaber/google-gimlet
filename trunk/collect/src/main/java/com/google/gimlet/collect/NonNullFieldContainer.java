@@ -27,13 +27,13 @@ import java.lang.reflect.Field;
  * This class is handy to use as a simple struct when more than one value needs
  * to be passed around.  For instance, within a class, imagine that one method
  * calls another to get database connection info:
- * {@code
+ * <pre>{@code
  *   static DatabaseConnectionParams extends NonNullFieldContainer {
  *      String username;
  *      String password;
  *      String hostname;
  *   }
- * }
+ * }</pre>
  * <p>
  * The method that receives this value should call {@link #checkInitialized()}
  * to ensure that all fields were set to non-null values. 
