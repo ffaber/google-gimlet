@@ -162,7 +162,7 @@ public class LegModuleBuilderTest extends TestCase {
 
   public void testOneConfigurableParam() {
     Injector injector = getInjector(
-        new LegModuleBuilder<OneConfigurableParam>()
+        new LegModuleBuilder()
             .implement(OneConfigurableParam.class)
             .using(INTEGER_KEY)
             .build());
@@ -178,11 +178,11 @@ public class LegModuleBuilderTest extends TestCase {
     Named named2 = Names.named("2");
 
     Injector injector = getInjector(
-        new LegModuleBuilder<OneConfigurableParam>()
+        new LegModuleBuilder()
             .implement(OneConfigurableParam.class)
             .using(INTEGER_KEY)
             .build(named1),
-        new LegModuleBuilder<OneConfigurableParam>()
+        new LegModuleBuilder()
             .implement(OneConfigurableParam.class)
             .using(INTEGER_KEY)
             .build(named2));
@@ -200,7 +200,7 @@ public class LegModuleBuilderTest extends TestCase {
 
   public void testTwoConfigurableParams() {
     Injector injector = getInjector(
-        new LegModuleBuilder<TwoConfigurableParams>()
+        new LegModuleBuilder()
             .implement(TwoConfigurableParams.class)
             .using(INTEGER_KEY)
             .using(STRING_KEY)
@@ -215,10 +215,10 @@ public class LegModuleBuilderTest extends TestCase {
 
   public void testTwoConfigurableParamsOfSameType() {
     Injector injector = getInjector(
-        new LegModuleBuilder<TwoConfigurableParamsOfSameType>()
+        new LegModuleBuilder()
             .implement(TwoConfigurableParamsOfSameType.class)
-            .using(INTEGER_KEY, "one")
-            .using(ANOTHER_INTEGER_KEY, "otherone")
+            .using(INTEGER_KEY).forLeg("one")
+            .using(ANOTHER_INTEGER_KEY).forLeg("otherone")
             .build());
     TwoConfigurableParamsOfSameType instance =
         injector.getInstance(TwoConfigurableParamsOfSameType.class);
@@ -230,7 +230,7 @@ public class LegModuleBuilderTest extends TestCase {
 
   public void testConfigurableParameterThroughProvider() {
     Injector injector = getInjector(
-        new LegModuleBuilder<ConfigurableParameterThroughProvider>()
+        new LegModuleBuilder()
             .implement(ConfigurableParameterThroughProvider.class)
             .using(INTEGER_KEY)
             .build());
@@ -243,7 +243,7 @@ public class LegModuleBuilderTest extends TestCase {
 
   public void testBindingInterfaceToConfigurableClass() {
     Injector injector = getInjector(
-        new LegModuleBuilder<OneConfigurableParamInterface>()
+        new LegModuleBuilder()
             .implement(
                 OneConfigurableParamInterface.class, OneConfigurableParam.class)
             .using(INTEGER_KEY)
@@ -257,7 +257,7 @@ public class LegModuleBuilderTest extends TestCase {
 
   public void testConfigurationKeysInMixedOrder() {
     Injector injector = getInjector(
-        new LegModuleBuilder<TwoConfigurableParams>()
+        new LegModuleBuilder()
             .implement(TwoConfigurableParams.class)
             .using(STRING_KEY)
             .using(INTEGER_KEY)
@@ -273,7 +273,7 @@ public class LegModuleBuilderTest extends TestCase {
   public void testNotEnoughValueKeysSupplied() {
     try {
       getInjector(
-          new LegModuleBuilder<TwoConfigurableParams>()
+          new LegModuleBuilder()
             .implement(TwoConfigurableParams.class)
             .using(INTEGER_KEY)
             .build());
@@ -284,7 +284,7 @@ public class LegModuleBuilderTest extends TestCase {
   public void testTooManyValueKeys() {
     try {
       getInjector(
-        new LegModuleBuilder<OneConfigurableParam>()
+          new LegModuleBuilder()
             .implement(OneConfigurableParam.class)
             .using(STRING_KEY)
             .using(INTEGER_KEY)
@@ -296,7 +296,7 @@ public class LegModuleBuilderTest extends TestCase {
   public void testClassHasMoreThanOneCtr() {
     try {
       getInjector(
-          new LegModuleBuilder<MoreThanOneConstructorMarkedWithInject>()
+          new LegModuleBuilder()
             .implement(MoreThanOneConstructorMarkedWithInject.class)
             .using(STRING_KEY)
             .build());
@@ -325,7 +325,7 @@ public class LegModuleBuilderTest extends TestCase {
 
     Injector injector = Guice.createInjector(
         customSeedModule,
-        new LegModuleBuilder<OneConfigurableParam>()
+        new LegModuleBuilder()
             .implement(OneConfigurableParam.class)
             .using(INTEGER_KEY)
             .build());

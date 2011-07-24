@@ -198,164 +198,162 @@ import java.util.Set;
  * {@code Dog}.
  *
  */
-public class LegModuleBuilder<T> {
-
-  private static final String DEFAULT_ASSISTED_LABEL = "";
-
-  private final Set<LabeledKey> valueKeySet = Sets.newHashSet();
-
-  private TypeLiteral<T> returnType;
-  private TypeLiteral<? extends T> implementationType;
+public class LegModuleBuilder {
 
   /** See the leg configuration examples at {@link LegModuleBuilder}. */
-  public LegModuleBuilder implement(Class<T> implementationType) {
+  public <T> UsingBuilder<T> implement(Class<T> implementationType) {
     return implement(TypeLiteral.get(implementationType));
   }
-  
+
   /** See the leg configuration examples at {@link LegModuleBuilder}. */
-  public LegModuleBuilder implement(TypeLiteral<T> implementationType) {
-    return implement(implementationType, implementationType);    
+  public <T> UsingBuilder<T> implement(TypeLiteral<T> implementationType) {
+    return implement(implementationType, implementationType);
   }
-  
+
   /** See the leg configuration examples at {@link LegModuleBuilder}. */
-  public LegModuleBuilder implement(
+  public <T> UsingBuilder<T> implement(
       Class<T> returnType, Class<? extends T> implementationType) {
     return implement(returnType, TypeLiteral.get(implementationType));
   }
 
   /** See the leg configuration examples at {@link LegModuleBuilder}. */
-  public LegModuleBuilder implement(
+  public <T> UsingBuilder<T> implement(
       Class<T> returnType, TypeLiteral<? extends T> implementationType) {
     return implement(TypeLiteral.get(returnType), implementationType);
   }
 
   /** See the leg configuration examples at {@link LegModuleBuilder}. */
-  public LegModuleBuilder implement(
+  public <T> UsingBuilder<T> implement(
       TypeLiteral<T> returnType, Class<? extends T> implementationType) {
     return implement(returnType, TypeLiteral.get(implementationType));
   }
 
   /** See the leg configuration examples at {@link LegModuleBuilder}. */
-  public LegModuleBuilder implement(
+  public <T> UsingBuilder<T> implement(
       TypeLiteral<T> returnType, TypeLiteral<? extends T> implementationType) {
     checkState(
         returnType != null && implementationType != null,
         "Cannot set implementation more than once.");
-    
-    this.returnType = returnType;
-    this.implementationType = implementationType;
-    
-    return this;
+
+    return new UsingBuilder<T>(returnType, implementationType);
   }
 
-  /** See the leg configuration examples at {@link LegModuleBuilder}. */
-  public LegModuleBuilder using(Class<?> clazz) {
-    return using(TypeLiteral.get(clazz));
+  public static class UsingBuilder<T> {
+    private final TypeLiteral<T> returnType;
+    private final TypeLiteral<? extends T> implementationType;
+
+    final Set<KeyOrInstanceUnionWithLabel<?>> valueSet =
+        Sets.newHashSet();
+
+    private UsingBuilder(
+        TypeLiteral<T> returnType,
+        TypeLiteral<? extends T> implementationType) {
+      this.returnType = returnType;
+      this.implementationType = implementationType;
+    }
+
+    /** See the leg configuration examples at {@link LegModuleBuilder}. */
+    public UsingBuilderWithFor<T> using(Class<?> clazz) {
+      return using(TypeLiteral.get(clazz));
+    }
+
+    public UsingBuilderWithFor<T> usingInstance(Object instance) {
+      return using(KeyOrInstanceUnionWithLabel.ofInstance(instance));
+    }
+
+    /** See the leg configuration examples at {@link LegModuleBuilder}. */
+    public UsingBuilderWithFor<T> using(
+        Class<?> clazz, Class<? extends Annotation> annotationClazz) {
+      return using(TypeLiteral.get(clazz), annotationClazz);
+    }
+
+    /** See the leg configuration examples at {@link LegModuleBuilder}. */
+    public UsingBuilderWithFor<T> using(Class<?> clazz, Annotation annotation) {
+      return using(TypeLiteral.get(clazz), annotation);
+    }
+
+    /** See the leg configuration examples at {@link LegModuleBuilder}. */
+    public UsingBuilderWithFor<T> using(TypeLiteral<?> valueTypeLiteral) {
+      return using(Key.get(valueTypeLiteral));
+    }
+
+    /** See the leg configuration examples at {@link LegModuleBuilder}. */
+    public UsingBuilderWithFor<T> using(
+        TypeLiteral<?> valueTypeLiteral,
+        Class<? extends Annotation> annotationClazz) {
+      return using(Key.get(valueTypeLiteral, annotationClazz));
+    }
+
+    /** See the leg configuration examples at {@link LegModuleBuilder}. */
+    public UsingBuilderWithFor<T> using(
+        TypeLiteral<?> valueTypeLiteral,
+        Annotation annotation) {
+      return using(Key.get(valueTypeLiteral, annotation));
+    }
+
+    /** See the leg configuration examples at {@link LegModuleBuilder}. */
+    public UsingBuilderWithFor<T> using(Key<?> valueKey) {
+      return using(KeyOrInstanceUnionWithLabel.ofKey(valueKey));
+    }
+
+    UsingBuilderWithFor<T> using(
+        KeyOrInstanceUnionWithLabel<?> unionWithLabel) {
+      // if in the midst of a call, add the old one, hold open the new one
+      checkState(
+          !valueSet.contains(unionWithLabel),
+          "%s is a duplicate configuration parameter within %s",
+          unionWithLabel, valueSet);
+
+      valueSet.add(unionWithLabel);
+      return new UsingBuilderWithFor<T>(this, unionWithLabel);
+    }
+
+    public Module build() {
+      return build(Key.get(returnType));
+    }
+
+    public Module build(Class<? extends Annotation> annotation) {
+      return build(Key.get(returnType, annotation));
+    }
+
+    public Module build(Annotation annotation) {
+      return build(Key.get(returnType, annotation));
+    }
+
+    private Module build(Key<T> returnType) {
+      return new LegBinder<T>(implementationType, valueSet)
+          .bindTo(returnType);
+    }
   }
 
-  /** See the leg configuration examples at {@link LegModuleBuilder}. */
-  public LegModuleBuilder using(Class<?> clazz, String label) {
-    return using(TypeLiteral.get(clazz), label);
-  }
+  static class UsingBuilderWithFor<T> extends UsingBuilder<T> {
 
-  /** See the leg configuration examples at {@link LegModuleBuilder}. */
-  public LegModuleBuilder using(
-      Class<?> clazz, Class<? extends Annotation> annotationClazz) {
-    return using(TypeLiteral.get(clazz), annotationClazz);
-  }
+    private final KeyOrInstanceUnionWithLabel keyOrInstanceUnionWithLabel;
 
-  /** See the leg configuration examples at {@link LegModuleBuilder}. */
-  public LegModuleBuilder using(
-      Class<?> clazz,
-      Class<? extends Annotation> annotationClazz,
-      String label) {
-    return using(TypeLiteral.get(clazz), annotationClazz, label);
-  }
+    private UsingBuilderWithFor(
+        UsingBuilder<T> usingBuilder,
+        KeyOrInstanceUnionWithLabel keyOrInstanceUnionWithLabel) {
+      super(usingBuilder.returnType, usingBuilder.implementationType);
+      this.keyOrInstanceUnionWithLabel = keyOrInstanceUnionWithLabel;
+      this.valueSet.addAll(usingBuilder.valueSet);
+    }
 
-  /** See the leg configuration examples at {@link LegModuleBuilder}. */
-  public LegModuleBuilder using(Class<?> clazz, Annotation annotation) {
-    return using(TypeLiteral.get(clazz), annotation);
-  }
+    @SuppressWarnings("unchecked")
+    public UsingBuilder<T> forLeg(String label) {
+      valueSet.remove(keyOrInstanceUnionWithLabel);
 
-  /** See the leg configuration examples at {@link LegModuleBuilder}. */
-  public LegModuleBuilder using(
-      Class<?> clazz, Annotation annotation, String label) {
-    return using(TypeLiteral.get(clazz), annotation, label);
-  }
+      final KeyOrInstanceUnionWithLabel<?> unionThatActuallyHasLabel;
+      if (keyOrInstanceUnionWithLabel.key != null) {
+        unionThatActuallyHasLabel = KeyOrInstanceUnionWithLabel.ofKey(
+            keyOrInstanceUnionWithLabel.key, label);
+      } else {
+        unionThatActuallyHasLabel = KeyOrInstanceUnionWithLabel.ofInstance(
+            keyOrInstanceUnionWithLabel.instance, label);
+      }
 
-  /** See the leg configuration examples at {@link LegModuleBuilder}. */
-  public LegModuleBuilder using(TypeLiteral<?> valueTypeLiteral) {
-    return using(Key.get(valueTypeLiteral));
-  }
+      using(unionThatActuallyHasLabel);
 
-  /** See the leg configuration examples at {@link LegModuleBuilder}. */
-  public LegModuleBuilder using(TypeLiteral<?> valueTypeLiteral, String label) {
-    return using(Key.get(valueTypeLiteral), label);
-  }
-
-  /** See the leg configuration examples at {@link LegModuleBuilder}. */
-  public LegModuleBuilder using(
-      TypeLiteral<?> valueTypeLiteral,
-      Class<? extends Annotation> annotationClazz) {
-    return using(Key.get(valueTypeLiteral, annotationClazz));
-  }
-
-  /** See the leg configuration examples at {@link LegModuleBuilder}. */
-  public LegModuleBuilder using(
-      TypeLiteral<?> valueTypeLiteral,
-      Class<? extends Annotation> annotationClazz,
-      String label) {
-    return using(Key.get(valueTypeLiteral, annotationClazz), label);
-  }
-
-  /** See the leg configuration examples at {@link LegModuleBuilder}. */
-  public LegModuleBuilder using(
-      TypeLiteral<?> valueTypeLiteral,
-      Annotation annotation) {
-    return using(Key.get(valueTypeLiteral, annotation));
-  }
-
-  /** See the leg configuration examples at {@link LegModuleBuilder}. */
-  public LegModuleBuilder using(
-      TypeLiteral<?> valueTypeLiteral,
-      Annotation annotation,
-      String label) {
-    return using(Key.get(valueTypeLiteral, annotation), label);
-  }
-
-  /** See the leg configuration examples at {@link LegModuleBuilder}. */
-  public LegModuleBuilder using(Key<?> valueKey) {
-    return using(valueKey, DEFAULT_ASSISTED_LABEL);
-  }
-
-  /** See the leg configuration examples at {@link LegModuleBuilder}. */
-  public LegModuleBuilder using(Key<?> valueKey, String label) {
-    LabeledKey proposedPair = LabeledKey.of(valueKey, label);
-
-    checkState(
-        !valueKeySet.contains(proposedPair),
-        "%s is a duplication configuration parameter. %s",
-        proposedPair, valueKeySet);
-
-    valueKeySet.add(proposedPair);
-
-    return this;
-  }
-
-  public Module build() {
-    return build(Key.get(returnType));
-  }
-
-  public Module build(Class<? extends Annotation> annotation) {
-    return build(Key.get(returnType, annotation));
-  }
-
-  public Module build(Annotation annotation) {
-    return build(Key.get(returnType, annotation));
-  }
-
-  private Module build(final Key<T> returnType) {
-    return new LegBinder<T>(
-        implementationType,valueKeySet).bindTo(returnType);
+      return this;
+    }
   }
 }
