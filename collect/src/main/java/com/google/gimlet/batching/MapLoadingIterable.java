@@ -42,6 +42,7 @@ import java.util.logging.Logger;
  * @param <K> the type of "bar" that are being loaded.
  * @param <V> the type of "foos" that are being loaded.
  * @param <I> the type of id for bars so that the next id can be determined.
+ * @see ListLoadingIterable
  */
 public abstract class MapLoadingIterable<K, V, I>
     extends ListLoadingIterable<I, KeyedBatch<K, V>> {
