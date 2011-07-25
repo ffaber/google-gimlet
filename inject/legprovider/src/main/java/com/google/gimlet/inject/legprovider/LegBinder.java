@@ -62,9 +62,6 @@ class LegBinder<T> {
       Set<KeyOrInstanceUnionWithLabel<?>> valueSet) {
     this.implementationType = implementationType;
 
-    // TODO: Consider implementing support for AssistedInject
-    // constructors. The challenge lies in writing code that will find matching
-    // constructors based on types and labels.
     // Find a matching constructor
     InjectionPoint ctorInjectionPoint =
         InjectionPoint.forConstructorOf(implementationType);

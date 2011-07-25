@@ -25,14 +25,15 @@ public class LegModuleBuilderRobotLegsTest extends TestCase {
   public void testRobotLegsWithLegModuleBuilder() {
     Injector injector = Guice.createInjector(
         new LegModuleBuilder()
-            .implement(Leg.class)
+            .bind(Leg.class)
+            .annotatedWith(Left.class)
             .usingInstance(new Foot("leftie"))
-            .build(Left.class),
+            .build(),
         new LegModuleBuilder()
-            .implement(Leg.class)
+            .bind(Leg.class)
+            .annotatedWith(Right.class)
             .usingInstance(new Foot("righty"))
-            .build(Right.class)
-    );
+            .build());
 
     Robot robot = injector.getInstance(Robot.class);
     assertSame("leftie", robot.leftLeg.foot.name);

@@ -26,13 +26,8 @@ import com.google.inject.Key;
  */
 final class LabeledKey<T> {
 
-  private static final String DEFAULT_LABEL_VALUE = "";
   private final Key<T> key;
   private final String label;
-
-  static <T> LabeledKey of(Key<T> key) {
-    return new LabeledKey<T>(key, DEFAULT_LABEL_VALUE);
-  }
 
   static <T> LabeledKey of(Key<T> key, String label) {
     return new LabeledKey<T>(key, label);
@@ -41,14 +36,6 @@ final class LabeledKey<T> {
   private LabeledKey(Key<T> key, String label) {
     this.key = key;
     this.label = label;
-  }
-
-  public Key<T> getKey() {
-    return key;
-  }
-
-  public String getLabel() {
-    return label;
   }
 
   @Override
