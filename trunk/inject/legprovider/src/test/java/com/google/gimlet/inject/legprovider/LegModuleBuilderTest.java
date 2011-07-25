@@ -124,15 +124,6 @@ public class LegModuleBuilderTest extends TestCase {
     }
   }
 
-  private static class MoreThanOneConstructorMarkedWithInject {
-
-    @Inject MoreThanOneConstructorMarkedWithInject(
-        @Foot Integer configurableParam) {}
-
-    @Inject MoreThanOneConstructorMarkedWithInject(
-        @Foot String configurableParam) {}
-  }
-
   @Retention(RetentionPolicy.RUNTIME)
   @Target({ElementType.FIELD, ElementType.PARAMETER})
   @BindingAnnotation
@@ -163,7 +154,7 @@ public class LegModuleBuilderTest extends TestCase {
   public void testOneConfigurableParam() {
     Injector injector = getInjector(
         new LegModuleBuilder()
-            .implement(OneConfigurableParam.class)
+            .bind(OneConfigurableParam.class)
             .using(INTEGER_KEY)
             .build());
     OneConfigurableParam instance =
@@ -179,13 +170,15 @@ public class LegModuleBuilderTest extends TestCase {
 
     Injector injector = getInjector(
         new LegModuleBuilder()
-            .implement(OneConfigurableParam.class)
+            .bind(OneConfigurableParam.class)
+            .annotatedWith(named1)
             .using(INTEGER_KEY)
-            .build(named1),
+            .build(),
         new LegModuleBuilder()
-            .implement(OneConfigurableParam.class)
+            .bind(OneConfigurableParam.class)
+            .annotatedWith(named2)
             .using(INTEGER_KEY)
-            .build(named2));
+            .build());
 
     OneConfigurableParam instance1 =
         injector.getInstance(Key.get(OneConfigurableParam.class, named1));
@@ -201,7 +194,7 @@ public class LegModuleBuilderTest extends TestCase {
   public void testTwoConfigurableParams() {
     Injector injector = getInjector(
         new LegModuleBuilder()
-            .implement(TwoConfigurableParams.class)
+            .bind(TwoConfigurableParams.class)
             .using(INTEGER_KEY)
             .using(STRING_KEY)
             .build());
@@ -216,9 +209,9 @@ public class LegModuleBuilderTest extends TestCase {
   public void testTwoConfigurableParamsOfSameType() {
     Injector injector = getInjector(
         new LegModuleBuilder()
-            .implement(TwoConfigurableParamsOfSameType.class)
-            .using(INTEGER_KEY).forLeg("one")
-            .using(ANOTHER_INTEGER_KEY).forLeg("otherone")
+            .bind(TwoConfigurableParamsOfSameType.class)
+            .using(INTEGER_KEY).forFoot("one")
+            .using(ANOTHER_INTEGER_KEY).forFoot("otherone")
             .build());
     TwoConfigurableParamsOfSameType instance =
         injector.getInstance(TwoConfigurableParamsOfSameType.class);
@@ -231,7 +224,7 @@ public class LegModuleBuilderTest extends TestCase {
   public void testConfigurableParameterThroughProvider() {
     Injector injector = getInjector(
         new LegModuleBuilder()
-            .implement(ConfigurableParameterThroughProvider.class)
+            .bind(ConfigurableParameterThroughProvider.class)
             .using(INTEGER_KEY)
             .build());
     ConfigurableParameterThroughProvider instance =
@@ -244,8 +237,8 @@ public class LegModuleBuilderTest extends TestCase {
   public void testBindingInterfaceToConfigurableClass() {
     Injector injector = getInjector(
         new LegModuleBuilder()
-            .implement(
-                OneConfigurableParamInterface.class, OneConfigurableParam.class)
+            .bind(OneConfigurableParamInterface.class)
+            .to(OneConfigurableParam.class)
             .using(INTEGER_KEY)
             .build());
     OneConfigurableParamInterface instance =
@@ -258,7 +251,7 @@ public class LegModuleBuilderTest extends TestCase {
   public void testConfigurationKeysInMixedOrder() {
     Injector injector = getInjector(
         new LegModuleBuilder()
-            .implement(TwoConfigurableParams.class)
+            .bind(TwoConfigurableParams.class)
             .using(STRING_KEY)
             .using(INTEGER_KEY)
             .build());
@@ -274,7 +267,7 @@ public class LegModuleBuilderTest extends TestCase {
     try {
       getInjector(
           new LegModuleBuilder()
-            .implement(TwoConfigurableParams.class)
+            .bind(TwoConfigurableParams.class)
             .using(INTEGER_KEY)
             .build());
       fail();
@@ -285,7 +278,7 @@ public class LegModuleBuilderTest extends TestCase {
     try {
       getInjector(
           new LegModuleBuilder()
-            .implement(OneConfigurableParam.class)
+            .bind(OneConfigurableParam.class)
             .using(STRING_KEY)
             .using(INTEGER_KEY)
             .build());
@@ -293,11 +286,20 @@ public class LegModuleBuilderTest extends TestCase {
     } catch (IllegalStateException expected) {}
   }
 
+  private static class MoreThanOneConstructorMarkedWithInject {
+
+    @Inject MoreThanOneConstructorMarkedWithInject(
+        @Foot Integer configurableParam) {}
+
+    @Inject MoreThanOneConstructorMarkedWithInject(
+        @Foot String configurableParam) {}
+  }
+
   public void testClassHasMoreThanOneCtr() {
     try {
       getInjector(
           new LegModuleBuilder()
-            .implement(MoreThanOneConstructorMarkedWithInject.class)
+            .bind(MoreThanOneConstructorMarkedWithInject.class)
             .using(STRING_KEY)
             .build());
       fail();
@@ -326,7 +328,7 @@ public class LegModuleBuilderTest extends TestCase {
     Injector injector = Guice.createInjector(
         customSeedModule,
         new LegModuleBuilder()
-            .implement(OneConfigurableParam.class)
+            .bind(OneConfigurableParam.class)
             .using(INTEGER_KEY)
             .build());
 
@@ -339,6 +341,37 @@ public class LegModuleBuilderTest extends TestCase {
         injector.getInstance(OneConfigurableParam.class);
     assertEquals(DOUBLE_VALUE, instance2.nonConfigurableParam);
     assertEquals(0, instance2.configurableParam.intValue());
+  }
+
+  private static class OneConfigurableParamAndOneFieldInjection {
+
+    Double nonConfigurableParam;
+    Integer configurableParam;
+
+    @Inject String fieldInjectedString;
+
+    @Inject
+    OneConfigurableParamAndOneFieldInjection(
+        Double nonConfigurableParam,
+        @Foot Integer configurableParam) {
+      this.nonConfigurableParam = nonConfigurableParam;
+      this.configurableParam = configurableParam;
+    }
+  }
+
+  public void testFieldInjectionWorksWithConfigurableConstructor() {
+    Injector injector = getInjector(
+        new LegModuleBuilder()
+            .bind(OneConfigurableParamAndOneFieldInjection.class)
+            .using(INTEGER_KEY)
+            .build());
+
+    OneConfigurableParamAndOneFieldInjection instance =
+        injector.getInstance(OneConfigurableParamAndOneFieldInjection.class);
+
+    assertSame(STRING_VALUE, instance.fieldInjectedString);
+    assertEquals(INTEGER_VALUE, instance.configurableParam);
+    assertEquals(DOUBLE_VALUE, instance.nonConfigurableParam);
   }
 
   private <T> Injector getInjector(Module... modules) {

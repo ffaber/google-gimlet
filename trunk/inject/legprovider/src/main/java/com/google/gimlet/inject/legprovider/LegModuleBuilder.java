@@ -18,6 +18,7 @@
 package com.google.gimlet.inject.legprovider;
 
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.collect.Iterables.getLast;
 
 import com.google.common.collect.Sets;
 import com.google.inject.Key;
@@ -25,8 +26,9 @@ import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 
 import java.lang.annotation.Annotation;
-import java.util.Set;
+import java.util.LinkedHashSet;
 
+// TODO(ffaber): rewrite / update javadoc to reflect new DSL
 /**
  * This class builds modules for a leg of a configurable class. There is a clear
  * conceptual overlap between this class and {@code FactoryModuleBuilder}. In
@@ -200,103 +202,165 @@ import java.util.Set;
  */
 public class LegModuleBuilder {
 
-  /** See the leg configuration examples at {@link LegModuleBuilder}. */
-  public <T> UsingBuilder<T> implement(Class<T> implementationType) {
-    return implement(TypeLiteral.get(implementationType));
+  // The mixins below help to enforce the following rules:
+  // if we call .bind(), we can call:  annotatedWith(), to(), using()
+  // if we call .annotatedWith(), we can call:  to(), using()
+  // if we call .to(), we can call: using()
+  // if we call using(), we can call: using(), forFoot(), build()
+
+  interface UsingMixin<T> {
+    ReturnedFromCallToUsing<T> using(Class<?> clazz);
+    ReturnedFromCallToUsing<T> using(
+        Class<?> clazz, Class<? extends Annotation> annotationClazz);
+    ReturnedFromCallToUsing<T> using(Class<?> clazz, Annotation annotation);
+    ReturnedFromCallToUsing<T> using(TypeLiteral<?> valueTypeLiteral);
+    ReturnedFromCallToUsing<T> using(
+        TypeLiteral<?> valueTypeLiteral,
+        Class<? extends Annotation> annotationClazz);
+    ReturnedFromCallToUsing<T> using(
+        TypeLiteral<?> valueTypeLiteral, Annotation annotation);
+    ReturnedFromCallToUsing<T> using(Key<?> valueKey);
+    ReturnedFromCallToUsing<T> usingInstance(Object instance);
   }
 
-  /** See the leg configuration examples at {@link LegModuleBuilder}. */
-  public <T> UsingBuilder<T> implement(TypeLiteral<T> implementationType) {
-    return implement(implementationType, implementationType);
+  interface ForFootMixin<T> extends UsingMixin<T> {
+    ReturnedFromCallToForFoot<T> forFoot(String footName);
   }
 
-  /** See the leg configuration examples at {@link LegModuleBuilder}. */
-  public <T> UsingBuilder<T> implement(
-      Class<T> returnType, Class<? extends T> implementationType) {
-    return implement(returnType, TypeLiteral.get(implementationType));
+  interface AnnotatedWithMixin<T> {
+    ReturnedFromCallToAnnotatedWith<T> annotatedWith(
+        Class<? extends Annotation> annotationClass);
+    ReturnedFromCallToAnnotatedWith<T> annotatedWith(
+        Annotation annotation);
   }
 
-  /** See the leg configuration examples at {@link LegModuleBuilder}. */
-  public <T> UsingBuilder<T> implement(
-      Class<T> returnType, TypeLiteral<? extends T> implementationType) {
-    return implement(TypeLiteral.get(returnType), implementationType);
+  interface ToMixin<T> {
+    ReturnedFromCallToTo<T> to(Class<? extends T> implementationClass);
+    ReturnedFromCallToTo<T> to(
+        TypeLiteral<? extends T> implementationTypeLiteral);
   }
 
-  /** See the leg configuration examples at {@link LegModuleBuilder}. */
-  public <T> UsingBuilder<T> implement(
-      TypeLiteral<T> returnType, Class<? extends T> implementationType) {
-    return implement(returnType, TypeLiteral.get(implementationType));
+  interface BuildMixin {
+    Module build();
   }
 
-  /** See the leg configuration examples at {@link LegModuleBuilder}. */
-  public <T> UsingBuilder<T> implement(
-      TypeLiteral<T> returnType, TypeLiteral<? extends T> implementationType) {
-    checkState(
-        returnType != null && implementationType != null,
-        "Cannot set implementation more than once.");
-
-    return new UsingBuilder<T>(returnType, implementationType);
+  interface ReturnedFromCallToBind<T> extends
+      AnnotatedWithMixin<T>,
+      ToMixin<T>,
+      UsingMixin<T> {
   }
 
-  public static class UsingBuilder<T> {
-    private final TypeLiteral<T> returnType;
-    private final TypeLiteral<? extends T> implementationType;
+  interface ReturnedFromCallToAnnotatedWith<T> extends
+      ToMixin<T>,
+      UsingMixin<T> {
+  }
 
-    final Set<KeyOrInstanceUnionWithLabel<?>> valueSet =
-        Sets.newHashSet();
+  interface ReturnedFromCallToTo<T> extends
+      UsingMixin<T> {
+  }
 
-    private UsingBuilder(
-        TypeLiteral<T> returnType,
-        TypeLiteral<? extends T> implementationType) {
-      this.returnType = returnType;
-      this.implementationType = implementationType;
+  interface ReturnedFromCallToUsing<T> extends
+      BuildMixin,
+      UsingMixin<T>,
+      ForFootMixin<T> {
+  }
+
+  interface ReturnedFromCallToForFoot<T> extends
+      BuildMixin,
+      UsingMixin<T> {
+  }
+
+
+  public <T> ReturnedFromCallToBind<T> bind(Class<T> interfaceType) {
+    return bind(TypeLiteral.get(interfaceType));
+  }
+
+  public <T> ReturnedFromCallToBind<T> bind(TypeLiteral<T> interfaceType) {
+    return new BindingBuilder<T>(interfaceType);
+  }
+
+  static class BindingBuilder<T> implements
+      ReturnedFromCallToBind<T>,
+      ReturnedFromCallToAnnotatedWith<T>,
+      ReturnedFromCallToTo<T>,
+      ReturnedFromCallToUsing<T>,
+      ReturnedFromCallToForFoot<T> {
+
+    private final LinkedHashSet<KeyOrInstanceUnionWithLabel<?>> valueSet =
+        Sets.newLinkedHashSet();
+    private Key<T> returnType;
+    private TypeLiteral<? extends T> implementationType;
+
+    private BindingBuilder(TypeLiteral<T> interfaceType) {
+      this.returnType = Key.get(interfaceType);
+      this.implementationType = interfaceType;
     }
 
-    /** See the leg configuration examples at {@link LegModuleBuilder}. */
-    public UsingBuilderWithFor<T> using(Class<?> clazz) {
+    @Override public ReturnedFromCallToAnnotatedWith<T> annotatedWith(
+        Class<? extends Annotation> annotationClass) {
+      returnType = Key.get(returnType.getTypeLiteral(), annotationClass);
+      return this;
+    }
+
+    @Override public ReturnedFromCallToAnnotatedWith<T> annotatedWith(
+        Annotation annotation) {
+      returnType = Key.get(returnType.getTypeLiteral(), annotation);
+      return this;
+    }
+
+    @Override public ReturnedFromCallToTo<T> to(
+        Class<? extends T> implementationClass) {
+      return to(TypeLiteral.get(implementationClass));
+    }
+
+    @Override public ReturnedFromCallToTo<T> to(
+        TypeLiteral<? extends T> implementationType) {
+      this.implementationType = implementationType;
+      return this;
+    }
+
+    @Override public ReturnedFromCallToUsing<T> using(Class<?> clazz) {
       return using(TypeLiteral.get(clazz));
     }
 
-    public UsingBuilderWithFor<T> usingInstance(Object instance) {
-      return using(KeyOrInstanceUnionWithLabel.ofInstance(instance));
-    }
-
-    /** See the leg configuration examples at {@link LegModuleBuilder}. */
-    public UsingBuilderWithFor<T> using(
-        Class<?> clazz, Class<? extends Annotation> annotationClazz) {
-      return using(TypeLiteral.get(clazz), annotationClazz);
-    }
-
-    /** See the leg configuration examples at {@link LegModuleBuilder}. */
-    public UsingBuilderWithFor<T> using(Class<?> clazz, Annotation annotation) {
-      return using(TypeLiteral.get(clazz), annotation);
-    }
-
-    /** See the leg configuration examples at {@link LegModuleBuilder}. */
-    public UsingBuilderWithFor<T> using(TypeLiteral<?> valueTypeLiteral) {
+    @Override public ReturnedFromCallToUsing<T> using(
+        TypeLiteral<?> valueTypeLiteral) {
       return using(Key.get(valueTypeLiteral));
     }
 
-    /** See the leg configuration examples at {@link LegModuleBuilder}. */
-    public UsingBuilderWithFor<T> using(
+    @Override public ReturnedFromCallToUsing<T> using(
+        Class<?> clazz,
+        Class<? extends Annotation> annotationClazz) {
+      return using(TypeLiteral.get(clazz), annotationClazz);
+    }
+
+    @Override public ReturnedFromCallToUsing<T> using(
         TypeLiteral<?> valueTypeLiteral,
         Class<? extends Annotation> annotationClazz) {
       return using(Key.get(valueTypeLiteral, annotationClazz));
     }
 
-    /** See the leg configuration examples at {@link LegModuleBuilder}. */
-    public UsingBuilderWithFor<T> using(
+    @Override public ReturnedFromCallToUsing<T> using(
+        Class<?> clazz,
+        Annotation annotation) {
+      return using(TypeLiteral.get(clazz), annotation);
+    }
+
+    @Override public ReturnedFromCallToUsing<T> using(
         TypeLiteral<?> valueTypeLiteral,
         Annotation annotation) {
       return using(Key.get(valueTypeLiteral, annotation));
     }
 
-    /** See the leg configuration examples at {@link LegModuleBuilder}. */
-    public UsingBuilderWithFor<T> using(Key<?> valueKey) {
+    @Override public ReturnedFromCallToUsing<T> using(Key<?> valueKey) {
       return using(KeyOrInstanceUnionWithLabel.ofKey(valueKey));
     }
 
-    UsingBuilderWithFor<T> using(
+    @Override public ReturnedFromCallToUsing<T> usingInstance(Object instance) {
+      return using(KeyOrInstanceUnionWithLabel.ofInstance(instance));
+    }
+
+    private ReturnedFromCallToUsing<T> using(
         KeyOrInstanceUnionWithLabel<?> unionWithLabel) {
       // if in the midst of a call, add the old one, hold open the new one
       checkState(
@@ -305,55 +369,28 @@ public class LegModuleBuilder {
           unionWithLabel, valueSet);
 
       valueSet.add(unionWithLabel);
-      return new UsingBuilderWithFor<T>(this, unionWithLabel);
+      return this;
     }
 
-    public Module build() {
-      return build(Key.get(returnType));
-    }
+    @Override public ReturnedFromCallToForFoot<T> forFoot(
+        String footName) {
+      KeyOrInstanceUnionWithLabel<?> lastEntry = getLast(valueSet);
+      valueSet.remove(lastEntry);
 
-    public Module build(Class<? extends Annotation> annotation) {
-      return build(Key.get(returnType, annotation));
-    }
-
-    public Module build(Annotation annotation) {
-      return build(Key.get(returnType, annotation));
-    }
-
-    private Module build(Key<T> returnType) {
-      return new LegBinder<T>(implementationType, valueSet)
-          .bindTo(returnType);
-    }
-  }
-
-  static class UsingBuilderWithFor<T> extends UsingBuilder<T> {
-
-    private final KeyOrInstanceUnionWithLabel keyOrInstanceUnionWithLabel;
-
-    private UsingBuilderWithFor(
-        UsingBuilder<T> usingBuilder,
-        KeyOrInstanceUnionWithLabel keyOrInstanceUnionWithLabel) {
-      super(usingBuilder.returnType, usingBuilder.implementationType);
-      this.keyOrInstanceUnionWithLabel = keyOrInstanceUnionWithLabel;
-      this.valueSet.addAll(usingBuilder.valueSet);
-    }
-
-    @SuppressWarnings("unchecked")
-    public UsingBuilder<T> forLeg(String label) {
-      valueSet.remove(keyOrInstanceUnionWithLabel);
-
-      final KeyOrInstanceUnionWithLabel<?> unionThatActuallyHasLabel;
-      if (keyOrInstanceUnionWithLabel.key != null) {
-        unionThatActuallyHasLabel = KeyOrInstanceUnionWithLabel.ofKey(
-            keyOrInstanceUnionWithLabel.key, label);
+      final KeyOrInstanceUnionWithLabel<?> thisEntry;
+      if (lastEntry.key != null) {
+        thisEntry = KeyOrInstanceUnionWithLabel.ofKey(lastEntry.key, footName);
       } else {
-        unionThatActuallyHasLabel = KeyOrInstanceUnionWithLabel.ofInstance(
-            keyOrInstanceUnionWithLabel.instance, label);
+        thisEntry = KeyOrInstanceUnionWithLabel.ofInstance(
+            lastEntry.instance, footName);
       }
 
-      using(unionThatActuallyHasLabel);
-
+      using(thisEntry);
       return this;
+    }
+
+    @Override public Module build() {
+      return new LegBinder<T>(implementationType, valueSet).bindTo(returnType);
     }
   }
 }
