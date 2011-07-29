@@ -374,6 +374,47 @@ public class LegModuleBuilderTest extends TestCase {
     assertEquals(DOUBLE_VALUE, instance.nonConfigurableParam);
   }
 
+  interface FooInterface {
+  }
+
+  static class FooImplementation1 implements FooInterface {
+  }
+
+  static class FooImplementation2 implements FooInterface {
+  }
+
+  static class TakesInjectionOfFooInterface {
+    final FooInterface fooInterface;
+
+    @Inject TakesInjectionOfFooInterface(
+        @Foot FooInterface fooInterface) {
+      this.fooInterface = fooInterface;
+    }
+  }
+
+  /**
+   * This test checks that the correct implementation of an interface is
+   * injected by specifying {@code using()} with the class to which the
+   * interface is bound.
+   */
+  public void testInjectImplementationOfInterface() {
+    Injector injector = Guice.createInjector(
+        new AbstractModule() {
+          @Override protected void configure() {
+            bind(FooInterface.class).to(FooImplementation1.class);
+          }
+        },
+        new LegModuleBuilder()
+            .bind(TakesInjectionOfFooInterface.class)
+            .using(FooInterface.class)
+            .build());
+    TakesInjectionOfFooInterface takesInjectionOfFooInterface =
+        injector.getInstance(TakesInjectionOfFooInterface.class);
+    assertSame(
+        FooImplementation1.class,
+        takesInjectionOfFooInterface.fooInterface.getClass());
+  }
+
   private <T> Injector getInjector(Module... modules) {
     List<Module> allModules = Lists.newArrayList(Arrays.asList(modules));
     allModules.add(SEED_MODULE);
