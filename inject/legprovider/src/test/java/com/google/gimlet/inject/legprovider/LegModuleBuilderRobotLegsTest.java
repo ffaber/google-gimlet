@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 /**
  * Tests the {@link LegModuleBuilder} class.
  *
- * @author ffaber@google.com (Fred Faber)
+ * @author ffaber@gmail.com (Fred Faber)
  */
 public class LegModuleBuilderRobotLegsTest extends TestCase {
 
