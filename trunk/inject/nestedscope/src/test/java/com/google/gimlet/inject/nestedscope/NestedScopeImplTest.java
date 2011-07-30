@@ -100,19 +100,19 @@ public class NestedScopeImplTest extends TestCase {
   public void testScopeSameObject_sameFrame() {
     nestedScopeImpl.enter(ValueBasedScopeId.of(NestedScopeImplTest.class));
 
-    Key<String> key = Key.get(String.class);
     String scopedValue = "first_value";
-    nestedScopeImpl.put(key, scopedValue);
+    nestedScopeImpl.put(String.class, scopedValue);
 
     try {
-      nestedScopeImpl.put(key, "second_put");
+      nestedScopeImpl.put(String.class, "second_put");
       fail("Should not have allowed 2 entries for the same key in the frame.");
     } catch (IllegalStateException ise) {
       // excepted
     }
 
     // Make sure the same value is still scoped
-    assertEquals(scopedValue, nestedScopeImpl.scope(key, null).get());
+    assertEquals(
+        scopedValue, nestedScopeImpl.scope(Key.get(String.class), null).get());
   }
 
   /** Tests that we can some 2 objects for the same key in different frames. */
