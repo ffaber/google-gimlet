@@ -60,6 +60,12 @@ public interface NestedScope extends Scope {
    */
   <T> void put(Key<T> key, T object);
 
+  /**
+   * Same as {@link #put(Key, Object)}, but accepts a {@link Class} from which
+   * a {@link Key} is created.
+   */
+  <T> void put(Class<T> clazz, T object);
+
   /** Must be called when the unit of work completes. */
   void exit();
 }

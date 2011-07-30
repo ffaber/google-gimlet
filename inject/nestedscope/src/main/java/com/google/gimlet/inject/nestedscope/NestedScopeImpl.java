@@ -85,6 +85,10 @@ final class NestedScopeImpl implements NestedScope {
     getBindingFrameStack().put(key, object);
   }
 
+  @Override public synchronized <T> void put(Class<T> clazz, T object) {
+    put(Key.get(clazz), object);
+  }
+
   @Override public void enterNew() {
     enterNew(ScopeId.DEFAULT);
   }
