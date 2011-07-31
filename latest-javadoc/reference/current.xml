@@ -1,0 +1,2660 @@
+<api>
+<package name="com.google.gimlet.batching"
+>
+<interface name="Batch"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="java.util.Collection">
+</implements>
+</interface>
+<interface name="BatchIterable"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="java.lang.Iterable">
+</implements>
+</interface>
+<interface name="BatchIterator"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="java.util.Iterator">
+</implements>
+</interface>
+<class name="Batches"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="forCollection"
+ return="com.google.gimlet.batching.Batch&lt;T&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="collection" type="java.util.Collection&lt;T&gt;">
+</parameter>
+</method>
+</class>
+<class name="KeyedBatch"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="getBatch"
+ return="com.google.gimlet.batching.Batch&lt;? extends V&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getKey"
+ return="K"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="of"
+ return="com.google.gimlet.batching.KeyedBatch&lt;K, V&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="key" type="K">
+</parameter>
+<parameter name="batch" type="com.google.gimlet.batching.Batch&lt;? extends V&gt;">
+</parameter>
+</method>
+</class>
+<class name="ListLoadingIterable"
+ extends="java.lang.Object"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="java.lang.Iterable">
+</implements>
+<constructor name="ListLoadingIterable"
+ type="com.google.gimlet.batching.ListLoadingIterable"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="initialValue" type="I">
+</parameter>
+<parameter name="loadingCallableTransform" type="com.google.gimlet.parallel.CallableTransform">
+</parameter>
+</constructor>
+<method name="getNextId"
+ return="I"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="previousEnd" type="T">
+</parameter>
+</method>
+<method name="iterator"
+ return="java.util.Iterator&lt;T&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="loadNextBatch"
+ return="java.util.List&lt;T&gt;"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="beginIdForBatch" type="I">
+</parameter>
+</method>
+</class>
+<class name="MapLoadingIterable"
+ extends="com.google.gimlet.batching.ListLoadingIterable"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="MapLoadingIterable"
+ type="com.google.gimlet.batching.MapLoadingIterable"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="initialValue" type="I">
+</parameter>
+<parameter name="loadCallableTransform" type="com.google.gimlet.parallel.CallableTransform">
+</parameter>
+<parameter name="batchSize" type="java.lang.Integer">
+</parameter>
+</constructor>
+<method name="getNextId"
+ return="I"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="previousEnd" type="com.google.gimlet.batching.KeyedBatch&lt;K, V&gt;">
+</parameter>
+</method>
+<method name="getOrdering"
+ return="com.google.common.collect.Ordering&lt;K&gt;"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</method>
+<method name="innerGetNextId"
+ return="I"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="previousEnd" type="K">
+</parameter>
+</method>
+<method name="loadBatch"
+ return="java.util.Map&lt;K, java.util.List&lt;V&gt;&gt;"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="beginIdForBatch" type="I">
+</parameter>
+<parameter name="batchSize" type="java.lang.Integer">
+</parameter>
+</method>
+<method name="loadNextBatch"
+ return="java.util.List&lt;com.google.gimlet.batching.KeyedBatch&lt;K, V&gt;&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="beginIdForBatch" type="I">
+</parameter>
+</method>
+</class>
+</package>
+<package name="com.google.gimlet.collect"
+>
+<class name="DefaultingMaps"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="newAtomicBooleanValuedMap"
+ return="java.util.Map&lt;K, java.util.concurrent.atomic.AtomicBoolean&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="initialDefaultValue" type="java.lang.Boolean">
+</parameter>
+</method>
+<method name="newAtomicIntValuedMap"
+ return="java.util.Map&lt;K, java.util.concurrent.atomic.AtomicInteger&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="newAtomicLongValueMap"
+ return="java.util.Map&lt;K, java.util.concurrent.atomic.AtomicLong&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="newDoubleKeyedDefaultingValueMap"
+ return="java.util.Map&lt;K1, java.util.Map&lt;K2, V&gt;&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="defaultingFunction" type="com.google.common.base.Function&lt;K2, V&gt;">
+</parameter>
+</method>
+<method name="newDoubleKeyedListValuedMap"
+ return="java.util.Map&lt;K1, java.util.Map&lt;K2, java.util.List&lt;V&gt;&gt;&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="newDoubleKeyedValueMap"
+ return="java.util.Map&lt;K1, java.util.Map&lt;K2, V&gt;&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="newExistingUniqueKeyMapValuedMap"
+ return="java.util.Map&lt;K1, java.util.Map&lt;K2, V&gt;&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="newListValuedMap"
+ return="java.util.Map&lt;K, java.util.List&lt;V&gt;&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="newListValuedMap"
+ return="java.util.Map&lt;K, java.util.List&lt;V&gt;&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="originalMap" type="java.util.Map&lt;K, java.util.List&lt;V&gt;&gt;">
+</parameter>
+</method>
+<method name="newSeededListValuedMap"
+ return="com.google.common.collect.ImmutableMap&lt;K, java.util.List&lt;V&gt;&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="keys" type="java.util.Set&lt;K&gt;">
+</parameter>
+</method>
+<method name="newSeededMap"
+ return="com.google.common.collect.ImmutableMap&lt;K, V&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="keys" type="java.util.Set&lt;K&gt;">
+</parameter>
+<parameter name="function" type="com.google.common.base.Function&lt;K, V&gt;">
+</parameter>
+</method>
+<method name="newSetValuedMap"
+ return="java.util.Map&lt;K, java.util.Set&lt;V&gt;&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="newTripleKeyedListValuedMap"
+ return="java.util.Map&lt;K1, java.util.Map&lt;K2, java.util.Map&lt;K3, java.util.List&lt;V&gt;&gt;&gt;&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+</class>
+<class name="GimletLists"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="concat"
+ return="com.google.common.collect.ImmutableList&lt;T&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="iterables" type="java.lang.Iterable&lt;? extends T&gt;...">
+</parameter>
+</method>
+<method name="concat"
+ return="com.google.common.collect.ImmutableList&lt;T&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="iterables" type="java.lang.Iterable&lt;? extends java.lang.Iterable&lt;? extends T&gt;&gt;">
+</parameter>
+</method>
+<method name="filter"
+ return="com.google.common.collect.ImmutableList&lt;T&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="iterable" type="java.lang.Iterable&lt;T&gt;">
+</parameter>
+<parameter name="predicate" type="com.google.common.base.Predicate&lt;? super T&gt;">
+</parameter>
+</method>
+<method name="transform"
+ return="com.google.common.collect.ImmutableList&lt;T&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="iterable" type="java.lang.Iterable&lt;F&gt;">
+</parameter>
+<parameter name="function" type="com.google.common.base.Function&lt;? super F, ? extends T&gt;">
+</parameter>
+</method>
+</class>
+<class name="GimletMaps"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="makeImmutable"
+ return="com.google.common.collect.ImmutableMap&lt;K, com.google.common.collect.ImmutableList&lt;V&gt;&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="map" type="java.util.Map&lt;K, java.util.List&lt;V&gt;&gt;">
+</parameter>
+</method>
+<method name="mergeMaps"
+ return="java.util.Map&lt;K, java.util.List&lt;V&gt;&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="mapsToMerge" type="java.lang.Iterable&lt;java.util.Map&lt;K, java.util.List&lt;V&gt;&gt;&gt;">
+</parameter>
+</method>
+<method name="mergeMaps"
+ return="java.util.Map&lt;K, java.util.List&lt;V&gt;&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="mapsToMerge" type="java.util.Map&lt;K, java.util.List&lt;V&gt;&gt;...">
+</parameter>
+</method>
+<method name="newEnsureKeyExistsMap"
+ return="java.util.Map&lt;K, V&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="newEnsureKeyExistsMap"
+ return="java.util.Map&lt;K, V&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="protectedMap" type="java.util.Map&lt;K, V&gt;">
+</parameter>
+</method>
+<method name="newExistingUniqueKeyMap"
+ return="java.util.Map&lt;K, V&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="newExistingUniqueKeyMap"
+ return="java.util.Map&lt;K, V&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="backingMap" type="java.util.Map&lt;K, V&gt;">
+</parameter>
+</method>
+<method name="newUniqueKeyMap"
+ return="java.util.Map&lt;K, V&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="newUniqueKeyMap"
+ return="java.util.Map&lt;K, V&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="backingMap" type="java.util.Map&lt;K, V&gt;">
+</parameter>
+</method>
+</class>
+<class name="NonNullFieldContainer"
+ extends="java.lang.Object"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="NonNullFieldContainer"
+ type="com.google.gimlet.collect.NonNullFieldContainer"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="checkInitialized"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+</class>
+</package>
+<package name="com.google.gimlet.commonality"
+>
+<interface name="CommonalityDetector"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="detectCommonality"
+ return="S"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="items" type="java.lang.Iterable&lt;T&gt;">
+</parameter>
+<exception name="CommonalityDetector.InconsistentCommonalityException" type="com.google.gimlet.commonality.CommonalityDetector.InconsistentCommonalityException">
+</exception>
+</method>
+</interface>
+<class name="CommonalityDetector.InconsistentCommonalityException"
+ extends="java.lang.RuntimeException"
+ abstract="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="CommonalityDetector.InconsistentCommonalityException"
+ type="com.google.gimlet.commonality.CommonalityDetector.InconsistentCommonalityException"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="message" type="java.lang.String">
+</parameter>
+</constructor>
+</class>
+<class name="CommonalityDetectors"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="detectCommonalityIntrospectively"
+ return="S"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="methodName" type="java.lang.String">
+</parameter>
+<parameter name="items" type="java.lang.Iterable&lt;?&gt;">
+</parameter>
+</method>
+<method name="detectCommonalityWithFunction"
+ return="S"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="items" type="java.lang.Iterable&lt;T&gt;">
+</parameter>
+<parameter name="extractor" type="com.google.common.base.Function&lt;? super T, ? extends S&gt;">
+</parameter>
+</method>
+<method name="forFunction"
+ return="com.google.gimlet.commonality.CommonalityDetector&lt;T, S&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="extractor" type="com.google.common.base.Function&lt;? super T, ? extends S&gt;">
+</parameter>
+</method>
+<method name="newReflexiveCommonalityDetector"
+ return="com.google.gimlet.commonality.CommonalityDetector&lt;T, S&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="methodName" type="java.lang.String">
+</parameter>
+</method>
+</class>
+</package>
+<package name="com.google.gimlet.inject.introspectingscoper"
+>
+<class name="CaptureInScope"
+ extends="java.lang.Object"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="java.lang.annotation.Annotation">
+</implements>
+</class>
+<class name="CaptureInScopeConstants"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<field name="DEFAULT_ANNOTATION_VALUE"
+ type="java.lang.Class"
+ transient="false"
+ volatile="false"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+</class>
+<class name="IntrospectingBinder"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="bindIntrospectively"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="target" type="java.lang.Class">
+</parameter>
+<parameter name="scopeAnnotation" type="java.lang.Class&lt;? extends java.lang.annotation.Annotation&gt;">
+</parameter>
+<parameter name="outOfScopeProvider" type="com.google.inject.Provider&lt;?&gt;">
+</parameter>
+</method>
+<method name="bindIntrospectivelyInScope"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="target" type="java.lang.Class">
+</parameter>
+<parameter name="scopeAnnotation" type="java.lang.Class&lt;? extends java.lang.annotation.Annotation&gt;">
+</parameter>
+</method>
+<method name="newIntrospectingBinder"
+ return="com.google.gimlet.inject.introspectingscoper.IntrospectingBinder"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="binder" type="com.google.inject.Binder">
+</parameter>
+</method>
+</class>
+<interface name="IntrospectingScoper"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="scopeIntrospectively"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="target" type="java.lang.Object">
+</parameter>
+</method>
+</interface>
+</package>
+<package name="com.google.gimlet.inject.introspectingscoper.defaults"
+>
+<class name="DefaultIntrospectingScopeModule"
+ extends="com.google.inject.AbstractModule"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="DefaultIntrospectingScopeModule"
+ type="com.google.gimlet.inject.introspectingscoper.defaults.DefaultIntrospectingScopeModule"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="configure"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</method>
+</class>
+</package>
+<package name="com.google.gimlet.inject.introspectingscoper.noop"
+>
+<class name="NoOpIntrospectingScoper"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="com.google.gimlet.inject.introspectingscoper.IntrospectingScoper">
+</implements>
+<constructor name="NoOpIntrospectingScoper"
+ type="com.google.gimlet.inject.introspectingscoper.noop.NoOpIntrospectingScoper"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="scopeIntrospectively"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="target" type="java.lang.Object">
+</parameter>
+</method>
+</class>
+<class name="NoOpModule"
+ extends="com.google.inject.AbstractModule"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="NoOpModule"
+ type="com.google.gimlet.inject.introspectingscoper.noop.NoOpModule"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="configure"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</method>
+</class>
+</package>
+<package name="com.google.gimlet.inject.legprovider"
+>
+<class name="Foot"
+ extends="java.lang.Object"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="java.lang.annotation.Annotation">
+</implements>
+</class>
+<class name="LegModuleBuilder"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="LegModuleBuilder"
+ type="com.google.gimlet.inject.legprovider.LegModuleBuilder"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="bind"
+ return="com.google.gimlet.inject.legprovider.LegModuleBuilder.ReturnedFromCallToBind&lt;T&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="interfaceType" type="java.lang.Class&lt;T&gt;">
+</parameter>
+</method>
+<method name="bind"
+ return="com.google.gimlet.inject.legprovider.LegModuleBuilder.ReturnedFromCallToBind&lt;T&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="interfaceType" type="com.google.inject.TypeLiteral&lt;T&gt;">
+</parameter>
+</method>
+</class>
+<interface name="LegModuleBuilder.ReturnedFromCallToAnnotatedWith"
+ abstract="true"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</interface>
+<interface name="LegModuleBuilder.ReturnedFromCallToBind"
+ abstract="true"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</interface>
+<interface name="LegModuleBuilder.ReturnedFromCallToForFoot"
+ abstract="true"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</interface>
+<interface name="LegModuleBuilder.ReturnedFromCallToTo"
+ abstract="true"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</interface>
+<interface name="LegModuleBuilder.ReturnedFromCallToUsing"
+ abstract="true"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</interface>
+</package>
+<package name="com.google.gimlet.inject.nestedscope"
+>
+<class name="CaptureInNestedScope"
+ extends="java.lang.Object"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="java.lang.annotation.Annotation">
+</implements>
+</class>
+<interface name="NestedScope"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="com.google.inject.Scope">
+</implements>
+<method name="enter"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="scopeId" type="com.google.gimlet.inject.nestedscope.ScopeId">
+</parameter>
+</method>
+<method name="enterNew"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="enterNew"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="scopeId" type="com.google.gimlet.inject.nestedscope.ScopeId">
+</parameter>
+</method>
+<method name="exit"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="put"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="key" type="com.google.inject.Key&lt;T&gt;">
+</parameter>
+<parameter name="object" type="T">
+</parameter>
+</method>
+<method name="put"
+ return="void"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="clazz" type="java.lang.Class&lt;T&gt;">
+</parameter>
+<parameter name="object" type="T">
+</parameter>
+</method>
+</interface>
+<class name="NestedScopeBasedProvider"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="com.google.inject.Provider">
+</implements>
+<constructor name="NestedScopeBasedProvider"
+ type="com.google.gimlet.inject.nestedscope.NestedScopeBasedProvider"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="get"
+ return="T"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+</class>
+<class name="NestedScopeCallableTransform"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="apply"
+ return="java.util.concurrent.Callable&lt;T&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="innerCallable" type="java.util.concurrent.Callable&lt;T&gt;">
+</parameter>
+</method>
+</class>
+<class name="NestedScopeClassMatcher"
+ extends="com.google.inject.matcher.AbstractMatcher"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="NestedScopeClassMatcher"
+ type="com.google.gimlet.inject.nestedscope.NestedScopeClassMatcher"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<constructor name="NestedScopeClassMatcher"
+ type="com.google.gimlet.inject.nestedscope.NestedScopeClassMatcher"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="aPackage" type="java.lang.Package">
+</parameter>
+</constructor>
+<method name="matches"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="clazz" type="java.lang.Class&lt;?&gt;">
+</parameter>
+</method>
+</class>
+<class name="NestedScopeInterceptorModule"
+ extends="com.google.inject.AbstractModule"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="NestedScopeInterceptorModule"
+ type="com.google.gimlet.inject.nestedscope.NestedScopeInterceptorModule"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="configure"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</method>
+</class>
+<class name="NestedScopeModule"
+ extends="com.google.inject.AbstractModule"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="NestedScopeModule"
+ type="com.google.gimlet.inject.nestedscope.NestedScopeModule"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="configure"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</method>
+</class>
+<class name="NestedScoped"
+ extends="java.lang.Object"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="java.lang.annotation.Annotation">
+</implements>
+</class>
+<interface name="ScopeId"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<field name="DEFAULT"
+ type="com.google.gimlet.inject.nestedscope.ScopeId"
+ transient="false"
+ volatile="false"
+ value="null"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+</interface>
+<class name="ScopeIdBasedBinder"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="bind"
+ return="com.google.inject.binder.LinkedBindingBuilder&lt;T&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="valueType" type="com.google.inject.TypeLiteral&lt;T&gt;">
+</parameter>
+</method>
+<method name="bind"
+ return="com.google.inject.binder.LinkedBindingBuilder&lt;T&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="valueType" type="com.google.inject.TypeLiteral&lt;T&gt;">
+</parameter>
+<parameter name="annotationType" type="java.lang.Class&lt;? extends java.lang.annotation.Annotation&gt;">
+</parameter>
+</method>
+<method name="bind"
+ return="com.google.inject.binder.LinkedBindingBuilder&lt;T&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="clazz" type="java.lang.Class&lt;T&gt;">
+</parameter>
+<parameter name="annotationType" type="java.lang.Class&lt;? extends java.lang.annotation.Annotation&gt;">
+</parameter>
+</method>
+<method name="bind"
+ return="com.google.inject.binder.LinkedBindingBuilder&lt;T&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="clazz" type="java.lang.Class&lt;T&gt;">
+</parameter>
+</method>
+<method name="bind"
+ return="com.google.inject.binder.LinkedBindingBuilder&lt;T&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="key" type="com.google.inject.Key&lt;T&gt;">
+</parameter>
+</method>
+<method name="newScopeIdBasedBinder"
+ return="com.google.gimlet.inject.nestedscope.ScopeIdBasedBinder"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="binder" type="com.google.inject.Binder">
+</parameter>
+<parameter name="scopeId" type="com.google.gimlet.inject.nestedscope.ScopeId">
+</parameter>
+</method>
+<method name="newScopeIdBasedBinder"
+ return="com.google.gimlet.inject.nestedscope.ScopeIdBasedBinder"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="binder" type="com.google.inject.Binder">
+</parameter>
+<parameter name="scopeId" type="com.google.gimlet.inject.nestedscope.ScopeId">
+</parameter>
+<parameter name="source" type="java.lang.Object">
+</parameter>
+</method>
+</class>
+<class name="ValueBasedScopeId"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="com.google.gimlet.inject.nestedscope.ScopeId">
+</implements>
+<method name="of"
+ return="com.google.gimlet.inject.nestedscope.ScopeId"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="value" type="java.lang.Object">
+</parameter>
+</method>
+</class>
+</package>
+<package name="com.google.gimlet.inject.nestedscope.testing"
+>
+<class name="NestedScopeTestScopeListener"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="NestedScopeTestScopeListener"
+ type="com.google.gimlet.inject.nestedscope.testing.NestedScopeTestScopeListener"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="enteringScope"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="exitingScope"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+</class>
+<class name="TestNestedScope"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="com.google.gimlet.inject.nestedscope.NestedScope">
+</implements>
+<constructor name="TestNestedScope"
+ type="com.google.gimlet.inject.nestedscope.testing.TestNestedScope"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="enter"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="scopeId" type="com.google.gimlet.inject.nestedscope.ScopeId">
+</parameter>
+</method>
+<method name="enterNew"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="enterNew"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="scopeId" type="com.google.gimlet.inject.nestedscope.ScopeId">
+</parameter>
+</method>
+<method name="exit"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getScopedObjects"
+ return="java.util.Map&lt;com.google.inject.Key&lt;?&gt;, java.lang.Object&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="put"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="key" type="com.google.inject.Key&lt;T&gt;">
+</parameter>
+<parameter name="object" type="T">
+</parameter>
+</method>
+<method name="put"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="clazz" type="java.lang.Class&lt;T&gt;">
+</parameter>
+<parameter name="object" type="T">
+</parameter>
+</method>
+<method name="scope"
+ return="com.google.inject.Provider&lt;T&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="key" type="com.google.inject.Key&lt;T&gt;">
+</parameter>
+<parameter name="unscoped" type="com.google.inject.Provider&lt;T&gt;">
+</parameter>
+</method>
+</class>
+</package>
+<package name="com.google.gimlet.parallel"
+>
+<interface name="CallableTransform"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="transform"
+ return="java.util.concurrent.Callable&lt;T&gt;"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="callable" type="java.util.concurrent.Callable&lt;T&gt;">
+</parameter>
+</method>
+</interface>
+<class name="CallableTransforms"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="getIdentityTransform"
+ return="com.google.gimlet.parallel.CallableTransform"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+</class>
+<class name="Callables"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="call"
+ return="com.google.common.base.Function&lt;java.util.concurrent.Callable&lt;T&gt;, T&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="callableFor"
+ return="java.util.concurrent.Callable&lt;T&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="value" type="T">
+</parameter>
+</method>
+<method name="fromProvider"
+ return="java.util.concurrent.Callable&lt;T&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="provider" type="com.google.inject.Provider&lt;? extends T&gt;">
+</parameter>
+</method>
+<method name="returnValueAsCallable"
+ return="com.google.common.base.Function&lt;I, java.util.concurrent.Callable&lt;O&gt;&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="transform" type="com.google.common.base.Function&lt;I, O&gt;">
+</parameter>
+</method>
+<method name="unsupportedCallable"
+ return="java.util.concurrent.Callable&lt;T&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+</class>
+<class name="ExecutionStrategies"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="executorServiceStrategy"
+ return="com.google.gimlet.parallel.ExecutionStrategy"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="executorService" type="java.util.concurrent.ExecutorService">
+</parameter>
+</method>
+<method name="sameThreadStrategy"
+ return="com.google.gimlet.parallel.ExecutionStrategy"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="singleThreadStrategy"
+ return="com.google.gimlet.parallel.ExecutionStrategy"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="threadName" type="java.lang.String">
+</parameter>
+</method>
+</class>
+<interface name="ExecutionStrategy"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="getParallelMapTransform"
+ return="com.google.common.base.Function&lt;java.lang.Iterable&lt;L&gt;, java.util.concurrent.Callable&lt;java.lang.Iterable&lt;T&gt;&gt;&gt;"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="mappingFunction" type="com.google.common.base.Function&lt;L, T&gt;">
+</parameter>
+</method>
+<method name="getParallelTransform"
+ return="com.google.common.base.Function&lt;java.util.concurrent.Callable&lt;T&gt;, java.util.concurrent.Callable&lt;T&gt;&gt;"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="getTransform"
+ return="com.google.common.base.Function&lt;java.util.concurrent.Callable&lt;T&gt;, java.util.concurrent.Future&lt;T&gt;&gt;"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+</interface>
+<class name="FunctionalIterables"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="collectCallables"
+ return="java.util.concurrent.Callable&lt;java.lang.Iterable&lt;T&gt;&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="callableIterable" type="java.lang.Iterable&lt;java.util.concurrent.Callable&lt;T&gt;&gt;">
+</parameter>
+</method>
+</class>
+<interface name="IterableCallableTransformer"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="apply"
+ return="java.util.concurrent.Callable&lt;java.lang.Iterable&lt;T&gt;&gt;"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="from" type="java.lang.Iterable&lt;java.util.concurrent.Callable&lt;T&gt;&gt;">
+</parameter>
+</method>
+</interface>
+<class name="IterableCallableTransformerProvider"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="com.google.inject.Provider">
+</implements>
+<method name="get"
+ return="com.google.gimlet.parallel.ExecutionStrategyBasedIterableCallableTransformer"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="of"
+ return="com.google.gimlet.parallel.IterableCallableTransformerProvider"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="executionStrategy" type="com.google.gimlet.parallel.ExecutionStrategy">
+</parameter>
+</method>
+</class>
+<class name="IterableCallableTransformers"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="getSimpleTransformer"
+ return="com.google.gimlet.parallel.IterableCallableTransformer"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+</class>
+<class name="ParallelModule"
+ extends="com.google.inject.AbstractModule"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="ParallelModule"
+ type="com.google.gimlet.parallel.ParallelModule"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="configure"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</method>
+</class>
+</package>
+<package name="com.google.gimlet.reflect"
+>
+<interface name="AnnotatedMethodExtractor"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="extractAllAnnotatedMethods"
+ return="com.google.common.collect.ImmutableList&lt;java.lang.reflect.Method&gt;"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="clazz" type="java.lang.Class&lt;?&gt;">
+</parameter>
+<parameter name="annotationClass" type="java.lang.Class&lt;? extends java.lang.annotation.Annotation&gt;">
+</parameter>
+</method>
+</interface>
+<class name="ClassGraph"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="ClassGraph"
+ type="com.google.gimlet.reflect.ClassGraph"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="addEdge"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="from" type="java.lang.Class&lt;?&gt;">
+</parameter>
+<parameter name="to" type="java.lang.Class&lt;?&gt;">
+</parameter>
+</method>
+<method name="containsNode"
+ return="boolean"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="node" type="java.lang.Class&lt;?&gt;">
+</parameter>
+</method>
+<method name="getNodesViaBreadthFirstSearch"
+ return="com.google.common.collect.ImmutableList&lt;java.lang.Class&lt;?&gt;&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="start" type="java.lang.Class&lt;?&gt;">
+</parameter>
+</method>
+</class>
+<class name="GetClosestVisibleMethods"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<implements name="com.google.common.base.Function">
+</implements>
+<constructor name="GetClosestVisibleMethods"
+ type="com.google.gimlet.reflect.GetClosestVisibleMethods"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="apply"
+ return="com.google.common.collect.ImmutableList&lt;java.lang.reflect.Method&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="clazz" type="java.lang.Class&lt;?&gt;">
+</parameter>
+</method>
+</class>
+<class name="GimletReflections"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="extractAllAnnotatedMethods"
+ return="com.google.common.collect.ImmutableList&lt;java.lang.reflect.Method&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="clazz" type="java.lang.Class&lt;?&gt;">
+</parameter>
+<parameter name="annotationClass" type="java.lang.Class&lt;? extends java.lang.annotation.Annotation&gt;">
+</parameter>
+</method>
+<method name="invokeMethods"
+ return="java.util.Map&lt;java.lang.reflect.Method, java.lang.Object&gt;"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="methods" type="java.lang.Iterable&lt;java.lang.reflect.Method&gt;">
+</parameter>
+<parameter name="target" type="java.lang.Object">
+</parameter>
+</method>
+</class>
+<interface name="MethodInvoker"
+ abstract="true"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="invokeMethod"
+ return="T"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="methodName" type="java.lang.String">
+</parameter>
+<parameter name="target" type="java.lang.Object">
+</parameter>
+<parameter name="returnClassType" type="java.lang.Class&lt;T&gt;">
+</parameter>
+<parameter name="args" type="java.lang.Object...">
+</parameter>
+<exception name="MethodInvoker.MethodInvocationException" type="com.google.gimlet.reflect.MethodInvoker.MethodInvocationException">
+</exception>
+</method>
+<method name="invokeMethods"
+ return="java.util.Map&lt;java.lang.reflect.Method, java.lang.Object&gt;"
+ abstract="true"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="methods" type="java.lang.Iterable&lt;java.lang.reflect.Method&gt;">
+</parameter>
+<parameter name="target" type="java.lang.Object">
+</parameter>
+<exception name="MethodInvoker.MethodInvocationException" type="com.google.gimlet.reflect.MethodInvoker.MethodInvocationException">
+</exception>
+</method>
+</interface>
+<class name="MethodInvoker.MethodInvocationException"
+ extends="java.lang.RuntimeException"
+ abstract="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</class>
+<class name="ReflectionModule"
+ extends="com.google.inject.AbstractModule"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="ReflectionModule"
+ type="com.google.gimlet.reflect.ReflectionModule"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="configure"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+</method>
+</class>
+</package>
+<package name="com.google.gimlet.testing.easymock"
+>
+<class name="Mocca"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="Mocca"
+ type="com.google.gimlet.testing.easymock.Mocca"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<method name="addControl"
+ return="C"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="control" type="C">
+</parameter>
+</method>
+<method name="createControl"
+ return="org.easymock.IMocksControl"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="createMock"
+ return="T"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="clazz" type="java.lang.Class&lt;T&gt;">
+</parameter>
+</method>
+<method name="replayAll"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="resetAll"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+<method name="verifyAll"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</method>
+</class>
+</package>
+<package name="com.google.gimlet.testing.tl4j"
+>
+<class name="GimletAsserts"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="assertContentsAnyOrder"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="actual" type="java.lang.Iterable&lt;?&gt;">
+</parameter>
+<parameter name="expected" type="java.lang.Object...">
+</parameter>
+</method>
+<method name="assertContentsAnyOrder"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="message" type="java.lang.String">
+</parameter>
+<parameter name="actual" type="java.lang.Iterable&lt;?&gt;">
+</parameter>
+<parameter name="expected" type="java.lang.Object...">
+</parameter>
+</method>
+<method name="assertContentsAnyOrder"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="message" type="java.lang.String">
+</parameter>
+<parameter name="expected" type="java.lang.Iterable&lt;?&gt;">
+</parameter>
+<parameter name="actual" type="java.lang.Iterable&lt;?&gt;">
+</parameter>
+</method>
+<method name="assertContentsAnyOrder"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="expected" type="java.lang.Iterable&lt;?&gt;">
+</parameter>
+<parameter name="actual" type="java.lang.Iterable&lt;?&gt;">
+</parameter>
+</method>
+<method name="assertContentsInOrder"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="actual" type="java.lang.Iterable&lt;?&gt;">
+</parameter>
+<parameter name="expected" type="java.lang.Object...">
+</parameter>
+</method>
+<method name="assertContentsInOrder"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="message" type="java.lang.String">
+</parameter>
+<parameter name="actual" type="java.lang.Iterable&lt;?&gt;">
+</parameter>
+<parameter name="expected" type="java.lang.Object...">
+</parameter>
+</method>
+<method name="assertSize"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="size" type="int">
+</parameter>
+<parameter name="actual" type="java.util.Collection&lt;?&gt;">
+</parameter>
+</method>
+</class>
+<class name="JUnitAsserts"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<method name="assertContainsRegex"
+ return="java.util.regex.MatchResult"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="message" type="java.lang.String">
+</parameter>
+<parameter name="expectedRegex" type="java.lang.String">
+</parameter>
+<parameter name="actual" type="java.lang.String">
+</parameter>
+</method>
+<method name="assertContainsRegex"
+ return="java.util.regex.MatchResult"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="expectedRegex" type="java.lang.String">
+</parameter>
+<parameter name="actual" type="java.lang.String">
+</parameter>
+</method>
+<method name="assertContentsAnyOrder"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="message" type="java.lang.String">
+</parameter>
+<parameter name="actual" type="java.lang.Iterable&lt;?&gt;">
+</parameter>
+<parameter name="expected" type="java.lang.Object...">
+</parameter>
+</method>
+<method name="assertContentsAnyOrder"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="actual" type="java.lang.Iterable&lt;?&gt;">
+</parameter>
+<parameter name="expected" type="java.lang.Object...">
+</parameter>
+</method>
+<method name="assertContentsInOrder"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="message" type="java.lang.String">
+</parameter>
+<parameter name="actual" type="java.lang.Iterable&lt;?&gt;">
+</parameter>
+<parameter name="expected" type="java.lang.Object...">
+</parameter>
+</method>
+<method name="assertContentsInOrder"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="actual" type="java.lang.Iterable&lt;?&gt;">
+</parameter>
+<parameter name="expected" type="java.lang.Object...">
+</parameter>
+</method>
+<method name="assertEmpty"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="message" type="java.lang.String">
+</parameter>
+<parameter name="iterable" type="java.lang.Iterable&lt;?&gt;">
+</parameter>
+</method>
+<method name="assertEmpty"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="iterable" type="java.lang.Iterable&lt;?&gt;">
+</parameter>
+</method>
+<method name="assertMatchesRegex"
+ return="java.util.regex.MatchResult"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="message" type="java.lang.String">
+</parameter>
+<parameter name="expectedRegex" type="java.lang.String">
+</parameter>
+<parameter name="actual" type="java.lang.String">
+</parameter>
+</method>
+<method name="assertMatchesRegex"
+ return="java.util.regex.MatchResult"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="expectedRegex" type="java.lang.String">
+</parameter>
+<parameter name="actual" type="java.lang.String">
+</parameter>
+</method>
+<method name="assertNotContainsRegex"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="message" type="java.lang.String">
+</parameter>
+<parameter name="unexpectedRegex" type="java.lang.String">
+</parameter>
+<parameter name="actual" type="java.lang.String">
+</parameter>
+</method>
+<method name="assertNotContainsRegex"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="unexpectedRegex" type="java.lang.String">
+</parameter>
+<parameter name="actual" type="java.lang.String">
+</parameter>
+</method>
+<method name="assertNotEqual"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="message" type="java.lang.String">
+</parameter>
+<parameter name="unexpected" type="java.lang.Object">
+</parameter>
+<parameter name="actual" type="java.lang.Object">
+</parameter>
+</method>
+<method name="assertNotEqual"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="unexpected" type="java.lang.Object">
+</parameter>
+<parameter name="actual" type="java.lang.Object">
+</parameter>
+</method>
+<method name="assertNotMatchesRegex"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="message" type="java.lang.String">
+</parameter>
+<parameter name="unexpectedRegex" type="java.lang.String">
+</parameter>
+<parameter name="actual" type="java.lang.String">
+</parameter>
+</method>
+<method name="assertNotMatchesRegex"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="true"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="unexpectedRegex" type="java.lang.String">
+</parameter>
+<parameter name="actual" type="java.lang.String">
+</parameter>
+</method>
+</class>
+</package>
+</api>
