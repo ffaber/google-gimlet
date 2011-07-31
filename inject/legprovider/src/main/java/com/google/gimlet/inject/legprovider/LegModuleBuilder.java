@@ -96,28 +96,28 @@ public class LegModuleBuilder {
     Module build();
   }
 
-  interface ReturnedFromCallToBind<T> extends
+  public interface ReturnedFromCallToBind<T> extends
       AnnotatedWithMixin<T>,
       ToMixin<T>,
       UsingMixin<T> {
   }
 
-  interface ReturnedFromCallToAnnotatedWith<T> extends
+  public interface ReturnedFromCallToAnnotatedWith<T> extends
       ToMixin<T>,
       UsingMixin<T> {
   }
 
-  interface ReturnedFromCallToTo<T> extends
+  public interface ReturnedFromCallToTo<T> extends
       UsingMixin<T> {
   }
 
-  interface ReturnedFromCallToUsing<T> extends
+  public interface ReturnedFromCallToUsing<T> extends
       BuildMixin,
       UsingMixin<T>,
       ForFootMixin<T> {
   }
 
-  interface ReturnedFromCallToForFoot<T> extends
+  public interface ReturnedFromCallToForFoot<T> extends
       BuildMixin,
       UsingMixin<T> {
   }
