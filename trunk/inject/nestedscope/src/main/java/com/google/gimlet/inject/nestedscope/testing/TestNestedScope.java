@@ -110,6 +110,11 @@ public class TestNestedScope implements NestedScope {
   }
 
   @Override
+  public <T> void put(Class<T> clazz, T object) {
+    put(Key.get(clazz), object);
+  }
+
+  @Override
   public <T> Provider<T> scope(Key<T> key, Provider<T> unscoped) {
     return delegateScope.scope(key, unscoped);
   }
