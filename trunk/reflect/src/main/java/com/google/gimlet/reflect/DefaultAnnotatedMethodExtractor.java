@@ -34,15 +34,16 @@ import java.util.Map;
 class DefaultAnnotatedMethodExtractor implements AnnotatedMethodExtractor {
 
   private Map<AnnotatedMethodRequestKey, ImmutableList<Method>>
-      ALL_ANNOTATED_METHODS_CACHE = new MapMaker().softKeys().makeComputingMap(
-      new Function<AnnotatedMethodRequestKey, ImmutableList<Method>>() {
+      ALL_ANNOTATED_METHODS_CACHE =
+      new MapMaker().softValues().makeComputingMap(
+          new Function<AnnotatedMethodRequestKey, ImmutableList<Method>>() {
 
-        @Override
-        public ImmutableList<Method> apply(AnnotatedMethodRequestKey key) {
-          return innerExtractAllAnnotatedMethods(
-              key.getClassToIntrospect(), key.getAnnotationClass());
-        }
-      });
+            @Override
+            public ImmutableList<Method> apply(AnnotatedMethodRequestKey key) {
+              return innerExtractAllAnnotatedMethods(
+                  key.getClassToIntrospect(), key.getAnnotationClass());
+            }
+          });
 
   @Override public ImmutableList<Method> extractAllAnnotatedMethods(
       Class<?> clazz, Class<? extends Annotation> annotationClass) {

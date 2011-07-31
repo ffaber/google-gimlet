@@ -37,7 +37,7 @@ import java.util.Map;
 class GetVisibleMethods implements Function<Class<?>, ImmutableList<Method>> {
 
   private static final Map<Class<?>, ClassGraph> HIERARCHY_GRAPHS =
-      new MapMaker().softKeys().makeComputingMap(new GetClassGraph());
+      new MapMaker().softValues().makeComputingMap(new GetClassGraph());
 
   private final Map<Class<?>, ImmutableList<Method>> VISIBLE_METHODS_CACHE =
       new MapMaker().softKeys().makeComputingMap(
