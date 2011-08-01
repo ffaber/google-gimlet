@@ -59,6 +59,7 @@ import java.util.Set;
  * <strong> Note that the ESDL of the {@link LinkedBindingBuilder} returned
  * from calls to {@code bind()} is not fully implemented.
  *
+ * @author andrei.g.matveev@gmail.com
  */
 public final class ScopeIdBasedBinder {
   /**

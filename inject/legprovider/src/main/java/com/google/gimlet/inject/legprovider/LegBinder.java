@@ -49,6 +49,7 @@ import java.util.Set;
  * a constructor parameter on the target class that is annotated with
  * {@link Foot}.
  *
+ * @author andrei.g.matveev@gmail.com
  */
 class LegBinder<T> {
 
