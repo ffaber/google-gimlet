@@ -43,6 +43,7 @@ import java.util.List;
 /**
  * Tests the {@link LegModuleBuilderTest} class.
  *
+ * @author andrei.g.matveev@gmail.com
  */
 public class LegModuleBuilderTest extends TestCase {
 

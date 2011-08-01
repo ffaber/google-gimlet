@@ -51,6 +51,8 @@ import java.util.LinkedHashSet;
  * <a href="https://code.google.com/p/google-gimlet/wiki/GimletLegProvider">
  * leg provider wiki</a> page for an illustration.
  *
+ * @author andrei.g.matveev@gmail.com
+ * @author ffaber@gmail.com
  */
 public class LegModuleBuilder {
 

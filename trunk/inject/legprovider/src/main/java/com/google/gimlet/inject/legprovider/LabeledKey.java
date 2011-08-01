@@ -23,6 +23,7 @@ import com.google.inject.Key;
 /**
  * A container that holds a {@link Key} and its associated string label.
  *
+ * @author andrei.g.matveev@gmail.com
  */
 final class LabeledKey<T> {
 
