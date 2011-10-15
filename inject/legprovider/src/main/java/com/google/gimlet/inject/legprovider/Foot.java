@@ -24,16 +24,21 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import javax.xml.bind.annotation.XmlElement.DEFAULT;
+
 /**
  * A constructor parameter annotated with {@code Leg} indicates that the param
  * is a foot (of potentially several feet) of a "robot leg."
  *
  * @author ffaber@gmail.com (Fred Faber)
+ * @see <a href="http://code.google.com/p/google-gimlet/wiki/GimletLegProvider">
+ *   http://code.google.com/p/google-gimlet/wiki/GimletLegProvider</a>
  */
-// TODO(ffaber): elaborate on what this means
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
+@Target({ElementType.PARAMETER, ElementType.FIELD})
 @BindingAnnotation
 public @interface Foot {
-  String value() default "";
+  String DEFAULT_FOOT_LABEL = "";
+
+  String value() default DEFAULT_FOOT_LABEL;
 }

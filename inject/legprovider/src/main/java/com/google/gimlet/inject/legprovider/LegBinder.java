@@ -17,25 +17,24 @@
 
 package com.google.gimlet.inject.legprovider;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Iterables.getOnlyElement;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.google.inject.Binder;
 import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.PrivateModule;
 import com.google.inject.Provider;
 import com.google.inject.TypeLiteral;
+import com.google.inject.spi.Dependency;
 import com.google.inject.spi.InjectionPoint;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -53,120 +52,74 @@ import java.util.Set;
  */
 class LegBinder<T> {
 
-  private final Constructor constructor;
   private final TypeLiteral<? extends T> implementationType;
   private final Map<Key<?>, KeyOrInstanceUnionWithLabel<?>>
-      configKeyToValueUnionMap;
+      declaredKeysToActualBindings = Maps.newHashMap();
 
   LegBinder(
       TypeLiteral<? extends T> implementationType,
       Set<KeyOrInstanceUnionWithLabel<?>> valueSet) {
     this.implementationType = implementationType;
 
-    // Find a matching constructor
-    InjectionPoint ctorInjectionPoint =
-        InjectionPoint.forConstructorOf(implementationType);
-    this.constructor = (Constructor) checkNotNull(
-        ctorInjectionPoint.getMember(),
-        "No suitable constructor was found in %s", implementationType);
+    Set<InjectionPoint> allInjectionPoints = Sets.newHashSet();
+    allInjectionPoints.add(InjectionPoint.forConstructorOf(implementationType));
+    allInjectionPoints.addAll(
+        InjectionPoint.forInstanceMethodsAndFields(implementationType));
+    allInjectionPoints.addAll(
+        InjectionPoint.forStaticMethodsAndFields(implementationType));
 
-    // We need to create some configuration keys (aka keys that appear on the
-    // constructor of the implementation class).
-    this.configKeyToValueUnionMap =
-        mapConfigKeysToValueUnions(constructor, valueSet);
-  }
+    // TODO(ffaber): refactor this a bit to make it more readable.
+    for (InjectionPoint injectionPoint : allInjectionPoints) {
+      List<Dependency<?>> dependencies = injectionPoint.getDependencies();
+      for (Dependency<?> dependency : dependencies) {
+        Key<?> declaredKey = dependency.getKey();
+        Class<? extends Annotation> annotationClass =
+            declaredKey.getAnnotationType();
+        if (annotationClass != Foot.class) {
+          continue;
+        }
 
-  /**
-   * This method maps the {@link Key keys} given to the {@code using()} methods
-   * of {@link LegModuleBuilder} to the {@link Foot} parameters on the
-   * constructor of the target class.
-   * <p>
-   * Note that this doesn't really need to return the union of <em>labeled</em>
-   * keys and instances, because no code beyond this method actually cares
-   * about the label.  This is done mainly for re-use of the data structure.
-   * If we were more pedantic, this method would return a [key, instance]
-   * union.
-   */
-  private Map<Key<?>, KeyOrInstanceUnionWithLabel<?>> mapConfigKeysToValueUnions(
-      Constructor constructor,
-      Set<KeyOrInstanceUnionWithLabel<?>> valueSet) {
-    Type[] paramTypes = constructor.getGenericParameterTypes();
-    Class<?>[] paramClasses = constructor.getParameterTypes();
-    Annotation[][] paramAnnotations = constructor.getParameterAnnotations();
+        Foot foot = (Foot) declaredKey.getAnnotation();
+        String declaredLabel = foot.value();
+        TypeLiteral<?> declaredTypeLiteral = declaredKey.getTypeLiteral();
+        Class<?> clazz = declaredTypeLiteral.getRawType();
 
-    Map<Key<?>, KeyOrInstanceUnionWithLabel<?>> configKeyToValueUnionMap =
-        Maps.newHashMap();
+        // For providers, we don't use "Provider" as the type, because we want
+        // to use the type of the thing a Provider provides as the type.
+        final TypeLiteral<?> nonProviderDeclaredTypeLiteral;
+        if (clazz.equals(Provider.class)
+            || clazz.equals(javax.inject.Provider.class)) {
+          ParameterizedType providerType =
+              (ParameterizedType) declaredTypeLiteral.getType();
+          Type underlyingType = getOnlyElement(
+              Arrays.asList(providerType.getActualTypeArguments()));
+          nonProviderDeclaredTypeLiteral = TypeLiteral.get(underlyingType);
+        } else {
+          nonProviderDeclaredTypeLiteral = declaredTypeLiteral;
+        }
 
-    // Extract the configuration keys
-    Map<LabeledKey, Key<?>> configLabeledKeyToConfigKeyMap = Maps.newHashMap();
-    for (int i = 0; i < paramTypes.length; i++) {
-      for (int j = 0; j < paramAnnotations[i].length; j++) {
-        if (paramAnnotations[i][j].annotationType().equals(Foot.class)) {
-          // If the configuration type is a Provider, then we must make sure
-          // to use the type of the Provider instead
-          final TypeLiteral<?> configTypeLiteral;
-          if (paramClasses[i].equals(Provider.class)
-              || paramClasses[i].equals(javax.inject.Provider.class)) {
-            checkState(
-                paramTypes[i] instanceof ParameterizedType,
-                "%s should be a ParameterizedType, but instead is %s",
-                paramClasses[i],
-                paramTypes[i]);
-            ParameterizedType paramType = (ParameterizedType) paramTypes[i];
-            configTypeLiteral = TypeLiteral.get(getOnlyElement(
-                Arrays.asList(paramType.getActualTypeArguments())));
-          } else {
-            configTypeLiteral = TypeLiteral.get(paramTypes[i]);
+        Key<?> declaredKeyToUse = Key.get(nonProviderDeclaredTypeLiteral, foot);
+
+        for (KeyOrInstanceUnionWithLabel<?> actualBinding :
+            Sets.newHashSet(valueSet)) {
+          TypeLiteral<?> actualTypeLiteral = actualBinding.getTypeLiteral();
+          String actualLabel = actualBinding.label;
+
+          if (actualTypeLiteral.equals(nonProviderDeclaredTypeLiteral)
+              && declaredLabel.equals(actualLabel)) {
+            declaredKeysToActualBindings.put(declaredKeyToUse, actualBinding);
+            valueSet.remove(actualBinding);
+            break;
           }
-
-          Foot annotation = (Foot) paramAnnotations[i][j];
-          configLabeledKeyToConfigKeyMap.put(
-              LabeledKey.of(Key.get(configTypeLiteral), annotation.value()),
-              Key.get(configTypeLiteral, annotation));
         }
       }
     }
 
-    // Now pair up configuration keys with value keys
-    Set<Key<?>> configKeysForLogging =
-        ImmutableSet.copyOf(configLabeledKeyToConfigKeyMap.values());
-
-    checkState(
-        configKeysForLogging.size() == valueSet.size(),
-        "The number of value keys does not match the number of configuration "
-        + "keys. Number of value keys: %s Number of configuration keys: %s",
-        configKeysForLogging.size(), valueSet.size());
-
-    for (KeyOrInstanceUnionWithLabel<?> keyOrInstanceUnionWithLabel : valueSet) {
-      final LabeledKey<?> configLookupKey;
-      if (keyOrInstanceUnionWithLabel.key != null) {
-        configLookupKey = LabeledKey.of(
-            Key.get(keyOrInstanceUnionWithLabel.key.getTypeLiteral()),
-            keyOrInstanceUnionWithLabel.label);
-      } else {
-        // TODO: we might want to get a little more clever with generic types
-        Key<?> key = Key.get(keyOrInstanceUnionWithLabel.instance.getClass());
-        configLookupKey = LabeledKey.of(key, keyOrInstanceUnionWithLabel.label);
-      }
-
-      Key<?> configKey = checkNotNull(
-          configLabeledKeyToConfigKeyMap.get(configLookupKey),
-          "\nValue key %s\n"
-           + "does not have a corresponding configuration key in:\n"
-           + "%s",
-          configLookupKey, configKeysForLogging);
-      configLabeledKeyToConfigKeyMap.remove(configLookupKey);
-
-      configKeyToValueUnionMap.put(configKey, keyOrInstanceUnionWithLabel);
+    if (!valueSet.isEmpty()) {
+      throw new IllegalStateException(
+          "Too many binding definitions given.  Excessive bindings are: "
+          + valueSet);
     }
-
-    checkState(
-        configLabeledKeyToConfigKeyMap.isEmpty(),
-        "Config keys %s did not have a matching value key in %s",
-        configLabeledKeyToConfigKeyMap.values(),
-        valueSet);
-
-    return configKeyToValueUnionMap;
   }
 
   Module bindTo(final Key<T> returnValueKey) {
@@ -176,19 +129,23 @@ class LegBinder<T> {
       @Override protected void configure() {
         Binder binder = binder();
 
-        for (Key<?> configKey : configKeyToValueUnionMap.keySet()) {
-          KeyOrInstanceUnionWithLabel<?> unionWithLabel =
-              configKeyToValueUnionMap.get(configKey);
+        for (Key<?> configKey : declaredKeysToActualBindings.keySet()) {
+          KeyOrInstanceUnionWithLabel<?> actualBinding =
+              declaredKeysToActualBindings.get(configKey);
 
-          if (unionWithLabel.key != null) {
-            binder.bind((Key) configKey).to(unionWithLabel.key);
+          if (actualBinding.key != null) {
+            binder.bind((Key) configKey).to(actualBinding.key);
           } else {
-            binder.bind((Key) configKey).toInstance(unionWithLabel.instance);
+            binder.bind((Key) configKey).toInstance(actualBinding.instance);
           }
         }
 
-        binder.bind(returnValueKey)
-            .toConstructor(constructor, (TypeLiteral) implementationType);
+        // We don't use .toConstructor() to support users of Guice 2.0
+        if (returnValueKey.equals(Key.get(implementationType))) {
+          binder.bind(returnValueKey);
+        } else {
+          binder.bind(returnValueKey).to(implementationType);
+        }
 
         expose(returnValueKey);
       }
