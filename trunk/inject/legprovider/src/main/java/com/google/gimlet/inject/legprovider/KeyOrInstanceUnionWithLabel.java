@@ -17,8 +17,18 @@
 
 package com.google.gimlet.inject.legprovider;
 
+import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.collect.Iterables.getOnlyElement;
+
 import com.google.common.base.Objects;
 import com.google.inject.Key;
+import com.google.inject.Provider;
+import com.google.inject.TypeLiteral;
+import com.google.inject.util.Types;
+
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Arrays;
 
 import javax.annotation.Nullable;
 
@@ -30,7 +40,7 @@ import javax.annotation.Nullable;
  * @author ffaber@gmail.com (Fred Faber)
  */
 final class KeyOrInstanceUnionWithLabel<T> {
-  private static final String DEFAULT_LABEL_VALUE = "";
+  private static final String DEFAULT_LABEL_VALUE = Foot.DEFAULT_FOOT_LABEL;
 
   final String label;
   @Nullable final Key<T> key;
@@ -63,6 +73,24 @@ final class KeyOrInstanceUnionWithLabel<T> {
     this.label = label;
     this.key = key;
     this.instance = instance;
+  }
+
+  @SuppressWarnings("unchecked") // we're casting to TypeLiteral<T>
+  TypeLiteral<T> getTypeLiteral() {
+    if (key != null) {
+      return key.getTypeLiteral();
+    }
+
+    if (instance.getClass().getTypeParameters().length == 0) {
+      return (TypeLiteral<T>) TypeLiteral.get(instance.getClass());
+    }
+
+    Class<?> parent = instance.getClass().getEnclosingClass();
+    final ParameterizedType actualType = Types.newParameterizedTypeWithOwner(
+        parent,
+        instance.getClass(),
+        instance.getClass().getTypeParameters());
+    return (TypeLiteral<T>) TypeLiteral.get(actualType);
   }
 
   @Override public boolean equals(Object o) {

@@ -16,11 +16,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Tests the {@link LegModuleBuilder} class.
+ * Tests the {@link LegModuleBuilder} class using constructor injection.
  *
  * @author ffaber@gmail.com (Fred Faber)
  */
-public class LegModuleBuilderRobotLegsTest extends TestCase {
+public class LegModuleBuilderRobotLegsWithConstructorInjectionTest
+    extends TestCase {
 
   public void testRobotLegsWithLegModuleBuilder() {
     Injector injector = Guice.createInjector(
@@ -77,8 +78,11 @@ public class LegModuleBuilderRobotLegsTest extends TestCase {
   }
 
   static class Leg {
-    @Inject @com.google.gimlet.inject.legprovider.Foot
-    private Foot foot;
+    private final Foot foot;
+
+    @Inject Leg(@com.google.gimlet.inject.legprovider.Foot Foot foot) {
+      this.foot = foot;
+    }
 
     @Override public String toString() {
       return "thigh-knee-calf-" + foot;

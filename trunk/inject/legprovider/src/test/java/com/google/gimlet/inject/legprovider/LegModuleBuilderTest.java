@@ -21,6 +21,7 @@ import com.google.common.collect.Lists;
 import com.google.inject.AbstractModule;
 import com.google.inject.BindingAnnotation;
 import com.google.inject.ConfigurationException;
+import com.google.inject.CreationException;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -85,6 +86,8 @@ public class LegModuleBuilderTest extends TestCase {
     Double nonConfigurableParam;
     Integer configurableParam1;
     String configurableParam2;
+
+    @Inject @Foot Integer configurableParam1MemberInjected;
 
     @Inject TwoConfigurableParams(
         Double nonConfigurableParam,
@@ -204,6 +207,7 @@ public class LegModuleBuilderTest extends TestCase {
 
     assertEquals(DOUBLE_VALUE, instance.nonConfigurableParam);
     assertEquals(INTEGER_VALUE, instance.configurableParam1);
+    assertEquals(INTEGER_VALUE, instance.configurableParam1MemberInjected);
     assertEquals(STRING_VALUE, instance.configurableParam2);
   }
 
@@ -261,6 +265,7 @@ public class LegModuleBuilderTest extends TestCase {
 
     assertEquals(DOUBLE_VALUE, instance.nonConfigurableParam);
     assertEquals(INTEGER_VALUE, instance.configurableParam1);
+    assertEquals(INTEGER_VALUE, instance.configurableParam1MemberInjected);
     assertEquals(STRING_VALUE, instance.configurableParam2);
   }
 
@@ -272,7 +277,7 @@ public class LegModuleBuilderTest extends TestCase {
             .using(INTEGER_KEY)
             .build());
       fail();
-    } catch (IllegalStateException expected) {}
+    } catch (CreationException expected) {}
   }
 
   public void testTooManyValueKeys() {
