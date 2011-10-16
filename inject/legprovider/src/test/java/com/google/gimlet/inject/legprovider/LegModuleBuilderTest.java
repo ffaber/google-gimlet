@@ -51,6 +51,7 @@ public class LegModuleBuilderTest extends TestCase {
   private interface OneConfigurableParamInterface {
     Double getNonConfigurableParam();
     Integer getConfigurableParam();
+    Integer getConfigurableParamMemberInjected();
   }
 
   // Classes below all have a non-configurable parameter injected into them.
@@ -61,6 +62,7 @@ public class LegModuleBuilderTest extends TestCase {
 
     Double nonConfigurableParam;
     Integer configurableParam;
+    @Inject @Foot Integer configurableParamMemberInjected;
 
     @Inject
     OneConfigurableParam(
@@ -78,6 +80,11 @@ public class LegModuleBuilderTest extends TestCase {
     @Override
     public Integer getConfigurableParam() {
       return configurableParam;
+    }
+
+    @Override
+    public Integer getConfigurableParamMemberInjected() {
+      return configurableParamMemberInjected;
     }
   }
 
@@ -119,6 +126,7 @@ public class LegModuleBuilderTest extends TestCase {
 
     Double nonConfigurableParam;
     Integer configurableParam;
+    @Inject @Foot Provider<Integer> configurableParamProviderMemberInjected;
 
     @Inject ConfigurableParameterThroughProvider(
         Double nonConfigurableParam,
@@ -166,6 +174,7 @@ public class LegModuleBuilderTest extends TestCase {
 
     assertEquals(DOUBLE_VALUE, instance.nonConfigurableParam);
     assertEquals(INTEGER_VALUE, instance.configurableParam);
+    assertEquals(INTEGER_VALUE, instance.configurableParamMemberInjected);
   }
 
   public void testOneConfigurableParam_multipleConfigurations() {
@@ -188,11 +197,13 @@ public class LegModuleBuilderTest extends TestCase {
         injector.getInstance(Key.get(OneConfigurableParam.class, named1));
     assertEquals(DOUBLE_VALUE, instance1.nonConfigurableParam);
     assertEquals(INTEGER_VALUE, instance1.configurableParam);
+    assertEquals(INTEGER_VALUE, instance1.configurableParamMemberInjected);
 
     OneConfigurableParam instance2 =
         injector.getInstance(Key.get(OneConfigurableParam.class, named2));
     assertEquals(DOUBLE_VALUE, instance2.nonConfigurableParam);
     assertEquals(INTEGER_VALUE, instance2.configurableParam);
+    assertEquals(INTEGER_VALUE, instance2.configurableParamMemberInjected);
   }
 
   public void testTwoConfigurableParams() {
@@ -237,6 +248,8 @@ public class LegModuleBuilderTest extends TestCase {
 
     assertEquals(DOUBLE_VALUE, instance.nonConfigurableParam);
     assertEquals(INTEGER_VALUE, instance.configurableParam);
+    assertEquals(
+        INTEGER_VALUE, instance.configurableParamProviderMemberInjected.get());
   }
 
   public void testBindingInterfaceToConfigurableClass() {
@@ -251,6 +264,7 @@ public class LegModuleBuilderTest extends TestCase {
 
     assertEquals(DOUBLE_VALUE, instance.getNonConfigurableParam());
     assertEquals(INTEGER_VALUE, instance.getConfigurableParam());
+    assertEquals(INTEGER_VALUE, instance.getConfigurableParamMemberInjected());
   }
 
   public void testConfigurationKeysInMixedOrder() {
@@ -342,11 +356,13 @@ public class LegModuleBuilderTest extends TestCase {
         injector.getInstance(OneConfigurableParam.class);
     assertEquals(DOUBLE_VALUE, instance1.nonConfigurableParam);
     assertEquals(0, instance1.configurableParam.intValue());
+    assertEquals(0, instance1.configurableParamMemberInjected.intValue());
 
     OneConfigurableParam instance2 =
         injector.getInstance(OneConfigurableParam.class);
     assertEquals(DOUBLE_VALUE, instance2.nonConfigurableParam);
     assertEquals(0, instance2.configurableParam.intValue());
+    assertEquals(0, instance2.configurableParamMemberInjected.intValue());
   }
 
   private static class OneConfigurableParamAndOneFieldInjection {
