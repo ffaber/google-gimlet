@@ -44,11 +44,10 @@ import java.util.Set;
  * Its main functionality is how its {@link #bindTo(Key)} method returns a
  * {@link Module module} that binds a given {@link TypeLiteral} to a
  * particular profile of a target class.  This "profile" is defined by the
- * set of values given as {@link LabeledKey}s, each of which corresponds to
- * a constructor parameter on the target class that is annotated with
- * {@link Foot}.
+ * set of values given as in the {@link LegModuleBuilder} DSL.
  *
- * @author andrei.g.matveev@gmail.com
+ * @author andrei.g.matveev@gmail.com [original]
+ * @author ffaber@gmail.com [refactor to SPI]
  */
 class LegBinder<T> {
 
@@ -68,7 +67,8 @@ class LegBinder<T> {
     allInjectionPoints.addAll(
         InjectionPoint.forStaticMethodsAndFields(implementationType));
 
-    // TODO(ffaber): refactor this a bit to make it more readable.
+    // For all injection points we match up the "declared" types on the
+    // @Foot-annotated class with the "actual" types to use.
     for (InjectionPoint injectionPoint : allInjectionPoints) {
       List<Dependency<?>> dependencies = injectionPoint.getDependencies();
       for (Dependency<?> dependency : dependencies) {
@@ -82,22 +82,11 @@ class LegBinder<T> {
         Foot foot = (Foot) declaredKey.getAnnotation();
         String declaredLabel = foot.value();
         TypeLiteral<?> declaredTypeLiteral = declaredKey.getTypeLiteral();
-        Class<?> clazz = declaredTypeLiteral.getRawType();
 
         // For providers, we don't use "Provider" as the type, because we want
         // to use the type of the thing a Provider provides as the type.
-        final TypeLiteral<?> nonProviderDeclaredTypeLiteral;
-        if (clazz.equals(Provider.class)
-            || clazz.equals(javax.inject.Provider.class)) {
-          ParameterizedType providerType =
-              (ParameterizedType) declaredTypeLiteral.getType();
-          Type underlyingType = getOnlyElement(
-              Arrays.asList(providerType.getActualTypeArguments()));
-          nonProviderDeclaredTypeLiteral = TypeLiteral.get(underlyingType);
-        } else {
-          nonProviderDeclaredTypeLiteral = declaredTypeLiteral;
-        }
-
+        TypeLiteral<?> nonProviderDeclaredTypeLiteral =
+            stripProviderType(declaredTypeLiteral);
         Key<?> declaredKeyToUse = Key.get(nonProviderDeclaredTypeLiteral, foot);
 
         for (KeyOrInstanceUnionWithLabel<?> actualBinding :
@@ -120,6 +109,28 @@ class LegBinder<T> {
           "Too many binding definitions given.  Excessive bindings are: "
           + valueSet);
     }
+  }
+
+  /**
+   * This method returns the given {@code declaredTypeLiteral} in all cases
+   * except that in which the raw type of the type literal is
+   * {@code Provider}, in which case this method returns a {@link TypeLiteral}
+   * that represents the actual type argument of the provider.
+   */
+  private TypeLiteral<?> stripProviderType(TypeLiteral<?> declaredTypeLiteral) {
+    Class<?> clazz = declaredTypeLiteral.getRawType();
+    final TypeLiteral<?> nonProviderDeclaredTypeLiteral;
+    if (clazz.equals(Provider.class)
+        || clazz.equals(javax.inject.Provider.class)) {
+      ParameterizedType providerType =
+          (ParameterizedType) declaredTypeLiteral.getType();
+      Type underlyingType = getOnlyElement(
+          Arrays.asList(providerType.getActualTypeArguments()));
+      nonProviderDeclaredTypeLiteral = TypeLiteral.get(underlyingType);
+    } else {
+      nonProviderDeclaredTypeLiteral = declaredTypeLiteral;
+    }
+    return nonProviderDeclaredTypeLiteral;
   }
 
   Module bindTo(final Key<T> returnValueKey) {
