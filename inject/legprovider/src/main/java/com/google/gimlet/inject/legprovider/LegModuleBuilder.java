@@ -74,7 +74,18 @@ public class LegModuleBuilder {
     ReturnedFromCallToUsing<T> using(
         TypeLiteral<?> valueTypeLiteral, Annotation annotation);
     ReturnedFromCallToUsing<T> using(Key<?> valueKey);
+    /**
+     * The {@code instance} passed within this method will be used as the value
+     * for the binding of the corresponding {@code Foot}-annotated element in
+     * the class being configured, by means of matching the instance's
+     * {@link TypeLiteral} with a {@code TypeLiteral} on the configured class.
+     * This is tricky, and should only be used for simple types.  For more
+     * complex types, pass in the {@code TypeLiteral} explicitly by using
+     * {@link #usingInstance(Object, TypeLiteral)}.
+     */
     ReturnedFromCallToUsing<T> usingInstance(Object instance);
+    ReturnedFromCallToUsing<T> usingInstance(
+        Object instance, TypeLiteral<T> typeLiteralToMatch);
   }
 
   interface ForFootMixin<T> extends UsingMixin<T> {
@@ -214,6 +225,13 @@ public class LegModuleBuilder {
       return using(KeyOrInstanceUnionWithLabel.ofInstance(instance));
     }
 
+    @SuppressWarnings("unchecked")
+    @Override public ReturnedFromCallToUsing<T> usingInstance(
+        Object instance, TypeLiteral<T> typeLiteralToMatch) {
+      return using(KeyOrInstanceUnionWithLabel.ofInstance(
+          instance, (TypeLiteral) typeLiteralToMatch));
+    }
+
     private ReturnedFromCallToUsing<T> using(
         KeyOrInstanceUnionWithLabel<?> unionWithLabel) {
       // if in the midst of a call, add the old one, hold open the new one
@@ -231,15 +249,7 @@ public class LegModuleBuilder {
       KeyOrInstanceUnionWithLabel<?> lastEntry = getLast(valueSet);
       valueSet.remove(lastEntry);
 
-      final KeyOrInstanceUnionWithLabel<?> thisEntry;
-      if (lastEntry.key != null) {
-        thisEntry = KeyOrInstanceUnionWithLabel.ofKey(lastEntry.key, footName);
-      } else {
-        thisEntry = KeyOrInstanceUnionWithLabel.ofInstance(
-            lastEntry.instance, footName);
-      }
-
-      using(thisEntry);
+      using(lastEntry.cloneAndAddLabel(footName));
       return this;
     }
 

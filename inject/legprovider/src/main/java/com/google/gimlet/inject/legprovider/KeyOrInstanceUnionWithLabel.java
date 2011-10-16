@@ -17,18 +17,12 @@
 
 package com.google.gimlet.inject.legprovider;
 
-import static com.google.common.base.Preconditions.checkState;
-import static com.google.common.collect.Iterables.getOnlyElement;
-
 import com.google.common.base.Objects;
 import com.google.inject.Key;
-import com.google.inject.Provider;
 import com.google.inject.TypeLiteral;
 import com.google.inject.util.Types;
 
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.Arrays;
 
 import javax.annotation.Nullable;
 
@@ -43,6 +37,7 @@ final class KeyOrInstanceUnionWithLabel<T> {
   private static final String DEFAULT_LABEL_VALUE = Foot.DEFAULT_FOOT_LABEL;
 
   final String label;
+  final TypeLiteral<T> typeLiteral;
   @Nullable final Key<T> key;
   @Nullable final T instance;
 
@@ -51,19 +46,34 @@ final class KeyOrInstanceUnionWithLabel<T> {
   }
 
   static <T> KeyOrInstanceUnionWithLabel<T> ofKey(Key<T> key, String label) {
-    return new KeyOrInstanceUnionWithLabel<T>(key, null, label);
+    return new KeyOrInstanceUnionWithLabel<T>(
+        key, null, key.getTypeLiteral(), label);
   }
 
   static <T> KeyOrInstanceUnionWithLabel<T> ofInstance(T instance) {
     return ofInstance(instance, DEFAULT_LABEL_VALUE);
   }
 
-  static <T> KeyOrInstanceUnionWithLabel<T> ofInstance(T instance, String label) {
-    return new KeyOrInstanceUnionWithLabel<T>(null, instance, label);
+  static <T> KeyOrInstanceUnionWithLabel<T> ofInstance(
+      T instance, TypeLiteral<T> typeLiteral) {
+    return ofInstance(instance, typeLiteral, DEFAULT_LABEL_VALUE);
+  }
+
+  static <T> KeyOrInstanceUnionWithLabel<T> ofInstance(
+      T instance, String label) {
+    return new KeyOrInstanceUnionWithLabel<T>(
+        null, instance, inferTypeLiteral(instance), label);
+  }
+
+  static <T> KeyOrInstanceUnionWithLabel<T> ofInstance(
+      T instance, TypeLiteral<T> typeLiteral, String label) {
+    return new KeyOrInstanceUnionWithLabel<T>(
+        null, instance, typeLiteral, label);
   }
 
   private KeyOrInstanceUnionWithLabel(
-      @Nullable Key<T> key, @Nullable T instance, String label) {
+      @Nullable Key<T> key, @Nullable T instance,
+      TypeLiteral<T> typeLiteral, String label) {
     if (key == null && instance == null
         || key != null && instance != null) {
       throw new IllegalArgumentException(String.format(
@@ -71,16 +81,13 @@ final class KeyOrInstanceUnionWithLabel<T> {
     }
 
     this.label = label;
+    this.typeLiteral = typeLiteral;
     this.key = key;
     this.instance = instance;
   }
 
   @SuppressWarnings("unchecked") // we're casting to TypeLiteral<T>
-  TypeLiteral<T> getTypeLiteral() {
-    if (key != null) {
-      return key.getTypeLiteral();
-    }
-
+  private static <T> TypeLiteral<T> inferTypeLiteral(T instance) {
     if (instance.getClass().getTypeParameters().length == 0) {
       return (TypeLiteral<T>) TypeLiteral.get(instance.getClass());
     }
@@ -91,6 +98,15 @@ final class KeyOrInstanceUnionWithLabel<T> {
         instance.getClass(),
         instance.getClass().getTypeParameters());
     return (TypeLiteral<T>) TypeLiteral.get(actualType);
+  }
+
+  KeyOrInstanceUnionWithLabel<T> cloneAndAddLabel(String label) {
+    return new KeyOrInstanceUnionWithLabel<T>(
+        key, instance, typeLiteral, label);
+  }
+
+  TypeLiteral<T> getTypeLiteral() {
+    return typeLiteral;
   }
 
   @Override public boolean equals(Object o) {
