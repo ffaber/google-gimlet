@@ -46,23 +46,23 @@ final class KeyOrInstanceUnionWithLabel<T> {
   @Nullable final Key<T> key;
   @Nullable final T instance;
 
-  static <T> KeyOrInstanceUnionWithLabel ofKey(Key<T> key) {
+  static <T> KeyOrInstanceUnionWithLabel<T> ofKey(Key<T> key) {
     return ofKey(key, DEFAULT_LABEL_VALUE);
   }
 
-  static <T> KeyOrInstanceUnionWithLabel ofKey(Key<T> key, String label) {
+  static <T> KeyOrInstanceUnionWithLabel<T> ofKey(Key<T> key, String label) {
     return new KeyOrInstanceUnionWithLabel<T>(key, null, label);
   }
 
-  static <T> KeyOrInstanceUnionWithLabel ofInstance(T instance) {
+  static <T> KeyOrInstanceUnionWithLabel<T> ofInstance(T instance) {
     return ofInstance(instance, DEFAULT_LABEL_VALUE);
   }
 
-  static <T> KeyOrInstanceUnionWithLabel ofInstance(T instance, String label) {
+  static <T> KeyOrInstanceUnionWithLabel<T> ofInstance(T instance, String label) {
     return new KeyOrInstanceUnionWithLabel<T>(null, instance, label);
   }
 
-  KeyOrInstanceUnionWithLabel(
+  private KeyOrInstanceUnionWithLabel(
       @Nullable Key<T> key, @Nullable T instance, String label) {
     if (key == null && instance == null
         || key != null && instance != null) {
