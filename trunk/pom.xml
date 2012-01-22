@@ -8,7 +8,7 @@
     <version>6</version>
   </parent>
   <groupId>com.google.gimlet</groupId>
-  <artifactId>gimlet-parent</artifactId>
+  <artifactId>gimlet</artifactId>
   <packaging>pom</packaging>
   <version>0.5-SNAPSHOT</version>
 
