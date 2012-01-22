@@ -4,14 +4,14 @@
 
   <parent>
     <groupId>com.google.gimlet</groupId>
-    <artifactId>gimlet-parent</artifactId>
+    <artifactId>gimlet</artifactId>
     <version>0.5-SNAPSHOT</version>
   </parent>
 
   <packaging>pom</packaging>
 
-  <groupId>com.google.gimlet</groupId>
-  <artifactId>testing-parent</artifactId>
+  <groupId>com.google.gimlet.testing</groupId>
+  <artifactId>testing</artifactId>
 
   <name>Gimlet Testing</name>
   <url>http://maven.apache.org</url>

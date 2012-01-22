@@ -4,14 +4,14 @@
 
   <parent>
     <groupId>com.google.gimlet</groupId>
-    <artifactId>gimlet-parent</artifactId>
+    <artifactId>gimlet</artifactId>
     <version>0.5-SNAPSHOT</version>
   </parent>
 
   <packaging>pom</packaging>
 
-  <groupId>com.google.gimlet</groupId>
-  <artifactId>inject-parent</artifactId>
+  <groupId>com.google.gimlet.inject</groupId>
+  <artifactId>inject</artifactId>
   <name>Gimlet Inject</name>
   <url>http://maven.apache.org</url>
 
@@ -20,9 +20,9 @@
   </properties>
 
   <modules>
+    <module>introspectingscoper</module>
     <module>legprovider</module>
     <module>nestedscope</module>
-    <module>introspectingscoper</module>
   </modules>
 
   <dependencies>
@@ -61,8 +61,8 @@
     </dependency>
 
     <dependency>
-      <groupId>com.google.gimlet</groupId>
-      <artifactId>testing-tl4j</artifactId>
+      <groupId>com.google.gimlet.testing</groupId>
+      <artifactId>tl4j</artifactId>
       <version>0.5-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
