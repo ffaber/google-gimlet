@@ -3,12 +3,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.google.gimlet</groupId>
-    <artifactId>testing-parent</artifactId>
+    <groupId>com.google.gimlet.testing</groupId>
+    <artifactId>testing</artifactId>
     <version>0.5-SNAPSHOT</version>
   </parent>
 
-  <artifactId>testing-tl4j</artifactId>
+  <artifactId>tl4j</artifactId>
   <name>Gimlet Testing Libraries 4 Java</name>
   <version>0.5-SNAPSHOT</version>
 
