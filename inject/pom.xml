@@ -20,6 +20,7 @@
   </properties>
 
   <modules>
+    <module>annotatedwithbinder</module>
     <module>introspectingscoper</module>
     <module>legprovider</module>
     <module>nestedscope</module>
