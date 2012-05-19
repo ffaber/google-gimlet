@@ -10,7 +10,7 @@
   <groupId>com.google.gimlet</groupId>
   <artifactId>gimlet</artifactId>
   <packaging>pom</packaging>
-  <version>0.5</version>
+  <version>0.5-SNAPSHOT</version>
 
   <name>Gimlet</name>
   <url>http://code.google.com/p/google-gimlet/</url>
@@ -36,9 +36,9 @@
   </modules>
 
   <scm>
-    <connection>scm:svn:http://google-gimlet.googlecode.com/svn/tags/gimlet-0.5</connection>
-    <developerConnection>scm:svn:https://google-gimlet.googlecode.com/svn/tags/gimlet-0.5</developerConnection>
-    <url>http://code.google.com/p/google-gimlet/source/browse/tags/gimlet-0.5</url>
+    <connection>scm:svn:http://google-gimlet.googlecode.com/svn/trunk</connection>
+    <developerConnection>scm:svn:https://google-gimlet.googlecode.com/svn/trunk</developerConnection>
+    <url>http://code.google.com/p/google-gimlet/source/browse</url>
   </scm>
 
   <build>
