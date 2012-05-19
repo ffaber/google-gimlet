@@ -1,15 +1,16 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>com.google.gimlet.inject</groupId>
     <artifactId>inject</artifactId>
-    <version>0.5</version>
+    <version>0.5-SNAPSHOT</version>
   </parent>
 
   <artifactId>introspectingscoper</artifactId>
   <name>Gimlet Inject Introspecting Scoper</name>
-  <version>0.5</version>
+  <version>0.5-SNAPSHOT</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,18 +20,18 @@
     <dependency>
       <groupId>com.google.gimlet.inject</groupId>
       <artifactId>nestedscope</artifactId>
-      <version>0.5</version>
+      <version>0.5-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.google.gimlet.reflect</groupId>
       <artifactId>reflect</artifactId>
-      <version>0.5</version>
+      <version>0.5-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>com.google.gimlet.testing</groupId>
       <artifactId>easymock</artifactId>
-      <version>0.5</version>
+      <version>0.5-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

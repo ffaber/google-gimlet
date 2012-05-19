@@ -1,15 +1,16 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>com.google.gimlet</groupId>
     <artifactId>gimlet</artifactId>
-    <version>0.5</version>
+    <version>0.5-SNAPSHOT</version>
   </parent>
 
   <groupId>com.google.gimlet.reflect</groupId>
   <artifactId>reflect</artifactId>
-  <version>0.5</version>
+  <version>0.5-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Gimlet Reflection</name>
@@ -49,13 +50,13 @@
     <dependency>
       <groupId>com.google.gimlet</groupId>
       <artifactId>collect</artifactId>
-      <version>0.5</version>
+      <version>0.5-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>com.google.gimlet</groupId>
       <artifactId>testing-tl4j</artifactId>
-      <version>0.5</version>
+      <version>0.5-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
     <dependency>

@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.google.gimlet</groupId>
     <artifactId>gimlet</artifactId>
-    <version>0.5</version>
+    <version>0.5-SNAPSHOT</version>
   </parent>
 
   <packaging>pom</packaging>
@@ -63,7 +63,7 @@
     <dependency>
       <groupId>com.google.gimlet.testing</groupId>
       <artifactId>tl4j</artifactId>
-      <version>0.5</version>
+      <version>0.5-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
     <dependency>
