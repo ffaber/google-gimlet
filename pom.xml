@@ -46,6 +46,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.4</version>
         <configuration>
           <source>1.6</source>
           <target>1.6</target>
@@ -109,6 +110,7 @@
      to the standard Nexus OSS repository infrastructure
   -->
   <distributionManagement>
+    <!--
     <snapshotRepository>
       <id>google-snapshots</id>
       <name>Sonatype OSS Nexus Snapshots</name>
@@ -119,6 +121,7 @@
       <name>Nexus OSS Staging Repository</name>
       <url> https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
+    -->
   </distributionManagement>
 
 </project>
